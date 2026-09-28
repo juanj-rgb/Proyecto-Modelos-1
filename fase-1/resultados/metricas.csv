@@ -1,0 +1,7 @@
+modelo,estrategia,integrante,MAE,RMSE,R2
+Baseline,DummyRegressor (media),Juan Rincon,90606.85,114485.64,-0.0002
+Regresion Lineal,Solo numericas,Oscar,51810.09,71131.26,0.6139
+Regresion Lineal,Preprocesamiento completo,Oscar,50670.49,70059.19,0.6254
+Arbol de Decision,Preprocesamiento completo,Samuel,42866.15,62817.98,0.6989
+Random Forest,Solo numericas,Juan Rincon,32098.51,49887.18,0.8101
+Random Forest,Preprocesamiento completo,Juan Rincon,31639.71,49036.98,0.8165
