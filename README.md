@@ -117,5 +117,5 @@ jupyter notebook notebook.ipynb
 | Integrante | Responsabilidad |
 |---|---|
 | **Oscar Plaza** | Análisis exploratorio, gestión del flujo principal, control de versiones e integración |
-| **Juan Rincón** | Configuración y administración del repositorio, partición de datos y modelo base |
+| **Juan José Durango** | Configuración y administración del repositorio, partición de datos y modelo base |
 | **Samuel Velásquez** | Lógica de imputación y codificación One-Hot, prevención de fuga de información |
