@@ -1,109 +1,121 @@
-# Predicción de Precios de Vivienda en California
+# 🏡 Predicción de Precios de Vivienda en California
 
-Este repositorio contiene el desarrollo de un pipeline end-to-end de Machine Learning para
-predecir el valor mediano de las viviendas en distintos distritos de California, utilizando el dataset *California Housing*.
+Proyecto Integrador de **Modelos y Simulación de Sistemas I** (Universidad de Antioquia, 2026-II). Pipeline de Machine Learning para predecir el valor mediano de vivienda (`median_house_value`) en distritos de California.
 
----
-
-## Contexto y Objetivo del Proyecto
-
-El objetivo principal es construir y evaluar modelos analíticos capaces de estimar el precio de las propiedades
-(`median_house_value`) en función de variables demográficas, geográficas y socioeconómicas. 
-
-Este proyecto se aborda mediante una metodología iterativa dividida en sprints, 
-asegurando buenas prácticas de control de versiones (Git/GitHub), limpieza de datos y validación de modelos.
+- **Tipo de problema:** regresión supervisada
+- **Dataset:** [California Housing Prices](https://www.kaggle.com/datasets/camnugent/california-housing-prices) (Kaggle, Cam Nugent)
+- **Docente:** Andrés Parra
 
 ---
 
-## Estructura del Repositorio
+## 📌 Contexto y objetivo
+
+El objetivo es construir un modelo predictivo reproducible y bien documentado, cuyo proceso pueda ejecutarse de nuevo únicamente con el notebook entregado, evitando errores metodológicos como la fuga de información. El proyecto se desarrolla de forma iterativa por Sprints, con control de versiones mediante Git Flow simplificado (`main`, `develop`, `feature/*`) y Pull Requests.
+
+---
+
+## 🗂️ Estructura del repositorio
 
 ```text
 Proyecto-Modelos-1/
-│
-├── fase-1/                   # Sprint 1: Preparación, Baseline y Modelos Iniciales
-│   ├── data/                 # Datasets crudos y particiones (Train / Test)
-│   └── notebook.ipynb        # Cuaderno principal de experimentación
-│
-├── resultados/
-│   └── metricas.csv          # Bitácora general de experimentos y métricas
-│
-├── .gitignore                # Archivos ignorados por Git
-├── requirements.txt          # Dependencias y librerías del proyecto
-└── README.md                 # Documentación e índice general del proyecto
+├── fase-1/
+│   ├── data/                  # housing.csv (no versionado) y particiones generadas por el notebook
+│   ├── resultados/
+│   │   └── metricas.csv       # Métricas de los 6 modelos (se recrea en cada ejecución)
+│   ├── notebook.ipynb         # Notebook principal: EDA, preparación, modelos y guardado
+│   ├── modelo.joblib          # Modelo final entrenado (Random Forest)
+│   └── README.md              # Documentación específica de la Fase 1
+├── requirements.txt           # Dependencias del proyecto
+├── .gitignore
+└── README.md                  # Este archivo
+```
 
+> `housing.csv` no se versiona por su tamaño. Descárgalo de Kaggle y ubícalo en `fase-1/data/housing.csv`.
 
-Índice de Sprints y Avances del Proyecto
-Sprint 1: Preparación de Datos, Baseline y Modelos Iniciales
+---
 
-Sprint 2: (En desarrollo / Próximamente)
+## 📅 Índice de Sprints
 
-Sprint 3: (En desarrollo / Próximamente)
+| Sprint | Estado | Detalle |
+|:---:|:---:|---|
+| **Sprint 1** | ✅ Completado | [Ver detalles](#-sprint-1--modelo-predictivo-fase-1) |
+| **Sprint 2** | 🔜 Pendiente | Scripts de entrenamiento y predicción |
+| **Sprint 3** | 🔜 Pendiente | Despliegue con Docker y API REST |
 
-Sprint 1: Preparación de Datos, Baseline y Modelos Iniciales
-Durante la primera etapa se estableció el flujo base de preparación de datos y evaluación de modelos, 
-fijando una semilla aleatoria (random_state=42)
-para garantizar la reproducibilidad de las particiones (80% Entrenamiento / 20% Prueba).
+---
 
-1. Modelo Baseline (Línea Base)
-Se entrenó un DummyRegressor usando la media del conjunto de entrenamiento para establecer
-la métrica mínima contra la cual comparar modelos más complejos.
+## 🚀 Sprint 1 — Modelo predictivo (Fase 1)
 
-2. Preprocesamiento e Ingeniería de Características
-Imputación de Faltantes: Se utilizó SimpleImputer(strategy='median') para gestionar los valores
-nulos en la variable total_bedrooms.
+### Partición y semilla
+- 80% entrenamiento / 20% prueba con `train_test_split` y `random_state=42`.
+- La partición se hace **antes** de cualquier imputación o codificación.
 
-Codificación Categórica: Se applied One-Hot Encoding sobre la variable categórica ocean_proximity,
-permitiendo incorporar la ubicación geográfica costera como señal predictiva.
+### Modelo base
+`DummyRegressor(strategy='mean')`: predice siempre la media de `y_train`. Es el piso contra el cual se mide cualquier mejora.
 
-3. Comparativa de Resultados y Desempeño
-Las métricas registradas en resultados/metricas.csv muestran el impacto directo de la ingeniería
-de datos en la precisión de las predicciones:
+### Preparación de datos
+| Variable | Problema | Estrategia |
+|---|---|---|
+| `total_bedrooms` | ~1% de valores nulos | Imputación por **mediana** con `SimpleImputer` (robusta ante la asimetría de la variable) |
+| `ocean_proximity` | Categórica nominal, sin orden | **One-Hot Encoding** (`drop_first=True`) |
 
-Baseline_Mean,Oscar,90606.85,114485.64,-0.0002
-Baseline_Mean,Oscar,90606.85,114485.64,-0.0002
-Linear_Regression_Simple,Oscar,51810.09,71131.26,0.6139
-Random_Forest_Simple,Oscar,32098.51,49887.18,0.8101
-Baseline_Mean,Oscar,90606.85,114485.64,-0.0002
-Linear_Regression_Simple,Oscar,51810.09,71131.26,0.6139
-Random_Forest_Simple,Oscar,32098.51,49887.18,0.8101
-Baseline_Mean,Oscar,90606.85,114485.64,-0.0002
-Linear_Regression_FullPrep,Oscar_Samuel,50670.49,70059.19,0.6254
-Random_Forest_FullPrep,Oscar_Samuel,31639.71,49036.98,0.8165
+### Prevención de fuga de información
+- `train_test_split` se ejecuta sobre los datos crudos, antes de transformar nada.
+- El imputador se ajusta (`fit`) **solo con `X_train`**; sobre `X_test` solo se aplica `transform`, con la mediana aprendida en entrenamiento.
+- Las columnas del One-Hot de prueba se alinean a las de entrenamiento.
+- La variable objetivo nunca se usa como predictora, y el conjunto de prueba no interviene en ninguna decisión de preparación.
 
-Conclusión del Sprint 1: La incorporación del One-Hot Encoding en ocean_proximity junto con la
-imputación correcta redujo el error medio absoluto (MAE) de Random Forest en más de $450 USD
-por vivienda y elevó la capacidad explicativa ($R^2$) al 81.65%.
+### Métricas
+- **MAE:** error promedio en dólares; es el criterio principal de selección.
+- **RMSE:** penaliza con más fuerza los errores grandes.
+- **R²:** proporción de la variabilidad del precio explicada por el modelo.
 
+### Resultados
+Ordenados de menor a mayor MAE:
 
-Cómo Reproducir el Proyecto
-1. Clonar el repositorio
+| Modelo | Estrategia / Preprocesamiento | Autor | MAE ($) | RMSE ($) | R² |
+|---|---|---|---:|---:|---:|
+| **Random Forest** | **Preprocesamiento completo** | **Juan Rincón** | **31,639.71** | **49,036.98** | **0.8165** |
+| Random Forest | Solo numéricas (sin One-Hot) | Juan Rincón | 32,098.51 | 49,887.18 | 0.8101 |
+| Árbol de Decisión | Preprocesamiento completo | Samuel | 42,866.15 | 62,817.98 | 0.6989 |
+| Regresión Lineal | Preprocesamiento completo | Oscar | 50,670.49 | 70,059.19 | 0.6254 |
+| Regresión Lineal | Solo numéricas (sin One-Hot) | Oscar | 51,810.09 | 71,131.26 | 0.6139 |
+| Baseline | DummyRegressor (media) | Juan Rincón | 90,606.85 | 114,485.64 | -0.0002 |
 
-git clone [https://github.com/juanj-rgb/Proyecto-Modelos-1.git](https://github.com/juanj-rgb/Proyecto-Modelos-1.git)
+### Conclusión del Sprint
+El Random Forest con preprocesamiento completo reduce el MAE de 90,606.85 a 31,639.71 USD (65% menos que el baseline) y explica el 81.65% de la variabilidad del precio. Agregar `ocean_proximity` mejora consistentemente ambos modelos: en Random Forest el MAE baja en más de 450 USD (de 32,098.51 a 31,639.71). Que los modelos basados en árboles superen al lineal indica que la relación entre las variables y el precio no es lineal. El modelo final se guarda en `fase-1/modelo.joblib`.
+
+---
+
+## 🔧 Cómo reproducir
+
+```bash
+# 1. Clonar
+git clone https://github.com/juanj-rgb/Proyecto-Modelos-1.git
 cd Proyecto-Modelos-1
 
-2. Crear y activar un entorno virtual
+# 2. Entorno virtual
+python -m venv venv
+venv\Scripts\activate          # Windows
+# source venv/bin/activate     # macOS / Linux
 
-python -m venv .venv
-
-# En Windows (PowerShell):
-.\.venv\Scripts\activate
-
-# En Mac/Linux:
-source .venv/bin/activate
-
-3. Instalar dependencias
-
+# 3. Dependencias
 pip install -r requirements.txt
 
-4. Ejecutar la Fase 1
+# 4. Descargar housing.csv de Kaggle y ubicarlo en fase-1/data/housing.csv
 
-Abre el archivo fase-1/notebook.ipynb en VS Code o Jupyter Lab y ejecuta todas las celdas para reproducir la carga de datos,
-el entrenamiento y la generación de la tabla de métricas.
+# 5. Ejecutar el notebook
+cd fase-1
+jupyter notebook notebook.ipynb
+# Kernel > Restart & Run All
+```
 
-Equipo de Trabajo
+---
 
-Oscar Plaza— Gestión del flujo principal, estructura del pipeline de modelos, control de versiones e integración final.
+## 👥 Equipo
 
-Juan Rincon — Configuración y administración del repositorio de proyectos.
-
-Samuel Velasquez— Lógica de imputación de valores nulos y codificación One-Hot para características categóricas.
+| Integrante | Responsabilidad |
+|---|---|
+| **Oscar Plaza** | Análisis exploratorio, gestión del flujo principal, control de versiones e integración |
+| **Juan Rincón** | Configuración y administración del repositorio, partición de datos y modelo base |
+| **Samuel Velásquez** | Lógica de imputación y codificación One-Hot, prevención de fuga de información |

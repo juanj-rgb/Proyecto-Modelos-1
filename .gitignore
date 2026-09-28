@@ -13,3 +13,6 @@ __pycache__/
 # Datos y pesados
 *.csv
 *.zip
+
+# Excepcion: las metricas del equipo si se versionan
+!fase-1/resultados/metricas.csv
