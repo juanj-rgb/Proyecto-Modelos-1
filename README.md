@@ -75,12 +75,12 @@ Ordenados de menor a mayor MAE:
 
 | Modelo | Estrategia / Preprocesamiento | Autor | MAE ($) | RMSE ($) | R² |
 |---|---|---|---:|---:|---:|
-| **Random Forest** | **Preprocesamiento completo** | **Juan Rincón** | **31,639.71** | **49,036.98** | **0.8165** |
-| Random Forest | Solo numéricas (sin One-Hot) | Juan Rincón | 32,098.51 | 49,887.18 | 0.8101 |
+| **Random Forest** | **Preprocesamiento completo** | **Juan Durango** | **31,639.71** | **49,036.98** | **0.8165** |
+| Random Forest | Solo numéricas (sin One-Hot) | Juan Durango | 32,098.51 | 49,887.18 | 0.8101 |
 | Árbol de Decisión | Preprocesamiento completo | Samuel | 42,866.15 | 62,817.98 | 0.6989 |
 | Regresión Lineal | Preprocesamiento completo | Oscar | 50,670.49 | 70,059.19 | 0.6254 |
 | Regresión Lineal | Solo numéricas (sin One-Hot) | Oscar | 51,810.09 | 71,131.26 | 0.6139 |
-| Baseline | DummyRegressor (media) | Juan Rincón | 90,606.85 | 114,485.64 | -0.0002 |
+| Baseline | DummyRegressor (media) | Juan Durango | 90,606.85 | 114,485.64 | -0.0002 |
 
 ### Conclusión del Sprint
 El Random Forest con preprocesamiento completo reduce el MAE de 90,606.85 a 31,639.71 USD (65% menos que el baseline) y explica el 81.65% de la variabilidad del precio. Agregar `ocean_proximity` mejora consistentemente ambos modelos: en Random Forest el MAE baja en más de 450 USD (de 32,098.51 a 31,639.71). Que los modelos basados en árboles superen al lineal indica que la relación entre las variables y el precio no es lineal. El modelo final se guarda en `fase-1/modelo.joblib`.
