@@ -16,3 +16,4 @@ __pycache__/
 
 # Excepcion: las metricas del equipo si se versionan
 !fase-1/resultados/metricas.csv
+!fase-1/resultados/metricas_cv.csv
