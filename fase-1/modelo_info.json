@@ -1,0 +1,22 @@
+{
+  "modelo": "Random Forest",
+  "estrategia": "Preprocesamiento completo",
+  "MAE_cv": 32309.46,
+  "columnas_entrada": [
+    "longitude",
+    "latitude",
+    "housing_median_age",
+    "total_rooms",
+    "total_bedrooms",
+    "population",
+    "households",
+    "median_income",
+    "ocean_proximity"
+  ],
+  "objetivo": "median_house_value",
+  "versiones": {
+    "scikit-learn": "1.9.1",
+    "pandas": "3.0.6",
+    "numpy": "2.4.6"
+  }
+}
