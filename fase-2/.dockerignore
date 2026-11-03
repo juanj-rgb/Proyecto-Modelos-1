@@ -1,0 +1,26 @@
+# Entornos virtuales y caches
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Git y archivos del repositorio
+.git/
+.gitignore
+
+# Credenciales (nunca deben entrar en la imagen)
+.env
+*.env
+credentials*
+*.pem
+*.key
+
+# Datos y artefactos: se montan como volumenes, no se copian a la imagen
+data/
+models/
+outputs/
+*.csv
+*.joblib
