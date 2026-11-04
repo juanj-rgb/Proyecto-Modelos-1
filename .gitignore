@@ -17,3 +17,13 @@ __pycache__/
 # Excepcion: las metricas del equipo si se versionan
 !fase-1/resultados/metricas.csv
 !fase-1/resultados/metricas_cv.csv
+
+# fase-2
+fase-2/outputs/
+fase-2/models/v-docker/
+fase-2/venv/
+.pytest_cache/
+.vscode/
+
+# Excepcion: el ejemplo de prediccion si se versiona
+!fase-2/data/ejemplo_prediccion.csv
