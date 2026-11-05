@@ -196,14 +196,14 @@ Usan datos sintéticos pequeños, directorios temporales y no requieren red ni e
 
 | Versión | Algoritmo y partición | MAE prueba (USD) | RMSE prueba (USD) | R² prueba | MAE modelo base | MAE val. cruzada (train) |
 |---|---|---:|---:|---:|---:|---:|
-| `v1` | Random Forest (100 árboles), aleatoria | COMPLETAR | COMPLETAR | COMPLETAR | COMPLETAR | COMPLETAR |
-| `v2` | Random Forest (50 árboles), por zonas | COMPLETAR | COMPLETAR | COMPLETAR | COMPLETAR | COMPLETAR |
+| `v1` | Random Forest (100 árboles), aleatoria | 31.636,35 | 48.977,06 | 0,8169 | 90.606,85 | 32.309,46 (± 548,23) |
+| `v2` | Random Forest (50 árboles), por zonas | 46.611,58 | 70.691,64 | 0,6555 | 99.167,70 | 53.559,91 (± 8.908,91) |
 
-Copiar las cifras de `models/v1/metrics.json` y `models/v2/metrics.json`. **El modelo base** (predecir siempre la media del entrenamiento) usa la misma partición y las mismas métricas. COMPLETAR: una o dos frases comparando el modelo con el base (cuánto baja el MAE).
+Copiar las cifras de `models/v1/metrics.json` y `models/v2/metrics.json`. **El modelo base** (predecir siempre la media del entrenamiento) usa la misma partición y las mismas métricas. En `v1` el MAE baja de 90.606,85 a 31.636,35 USD (65,08 % menos que el modelo base) y el R² pasa de −0,0002 a 0,8169. En `v2` baja de 99.167,70 a 46.611,58 USD (53,0 % menos) y el R² es 0,6555; en ambos casos el modelo supera con claridad al base.
 
-**Referencia de la Fase 1 v1.1** (misma partición, semilla y pipeline): Random Forest con preprocesamiento completo, MAE de prueba 31.636,35, RMSE 48.977,06 y R² 0,8169; MAE de validación cruzada 32.309,46; modelo base con MAE 90.606,85. `v1` usa el mismo pipeline y la misma partición, por lo que con los mismos datos y las mismas versiones de librerías se espera que reproduzca esas cifras. COMPLETAR: indicar si coinciden y, si no, explicar la diferencia.
+**Referencia de la Fase 1 v1.1** (misma partición, semilla y pipeline): Random Forest con preprocesamiento completo, MAE de prueba 31.636,35, RMSE 48.977,06 y R² 0,8169; MAE de validación cruzada 32.309,46; modelo base con MAE 90.606,85. `v1` usa el mismo pipeline y la misma partición, por lo que con los mismos datos y las mismas versiones de librerías se espera que reproduzca esas cifras. **Resultado:** coinciden. `v1` obtuvo MAE 31.636,35, RMSE 48.977,06, R² 0,8169, MAE del modelo base 90.606,85 y MAE de validación cruzada 32.309,46 (partición de 16.512 filas de entrenamiento y 4.128 de prueba), las mismas cifras de la Fase 1 v1.1.
 
-**`v1` y `v2` no son comparables entre sí**: usan particiones distintas y miden escenarios distintos (zonas conocidas vs. zonas nuevas). Que `v2` tenga un error mayor o menor que `v1` es información sobre la sensibilidad espacial, no sobre cuál modelo es “mejor”. COMPLETAR: una frase interpretando la diferencia observada.
+**`v1` y `v2` no son comparables entre sí**: usan particiones distintas y miden escenarios distintos (zonas conocidas vs. zonas nuevas). Que `v2` tenga un error mayor o menor que `v1` es información sobre la sensibilidad espacial, no sobre cuál modelo es “mejor”. En `v2`, con zonas completas reservadas para la prueba (14.410 filas de entrenamiento y 6.230 de prueba), el MAE de prueba es 46.611,58 USD, un 47,3 % mayor que el de `v1`. Va en la misma dirección que la Fase 1 v1.1, donde el error de validación cruzada subió un 51 % al separar por zonas; las cifras no son idénticas porque son esquemas y particiones distintos. El resultado respalda que el modelo debe usarse en zonas ya representadas en los datos.
 
 **Alcance y limitaciones conocidas**
 
