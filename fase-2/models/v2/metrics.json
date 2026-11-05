@@ -1,0 +1,27 @@
+{
+  "version": "v2",
+  "metrica_principal": "MAE",
+  "modelo": {
+    "MAE": 46611.58077688604,
+    "RMSE": 70691.6377417006,
+    "R2": 0.6555151584535128
+  },
+  "modelo_base": {
+    "descripcion": "DummyRegressor (media del entrenamiento)",
+    "MAE": 99167.69574561984,
+    "RMSE": 121760.81090441476,
+    "R2": -0.02199575829596956
+  },
+  "mejora_MAE_vs_base_pct": 53.0,
+  "validacion_cruzada_entrenamiento": {
+    "folds": 5,
+    "esquema": "por zonas",
+    "MAE_media": 53559.908546054874,
+    "MAE_desv": 8908.908769314474,
+    "RMSE_media": 73034.59087481449,
+    "R2_media": 0.5122522487249024
+  },
+  "n_entrenamiento": 14410,
+  "n_prueba": 6230,
+  "nota": "La prueba se usa una sola vez, para evaluar; no interviene en el ajuste ni en la seleccion."
+}
