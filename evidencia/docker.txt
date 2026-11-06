@@ -1,0 +1,43 @@
+PS C:\Users\juanj\Downloads\fase-2_codigo\fase-2> Remove-Item -Recurse -Force models\v-docker -ErrorAction SilentlyContinue
+PS C:\Users\juanj\Downloads\fase-2_codigo\fase-2> docker run --rm -v "${PWD}/data:/app/data:ro" -v "${PWD}/models:/app/models" modelos-fase2:1.0 python train.py --data data/housing.csv --target median_house_value --output-dir models --version v-docker --seed 42
+Version entrenada: v-docker
+  Algoritmo        : random_forest
+  Particion        : aleatoria (train_test_split) (train=16512, test=4128)
+  Modelo  (prueba) : MAE=31,636.35  RMSE=48,977.06  R2=0.8169
+  Base    (prueba) : MAE=90,606.85  RMSE=114,485.64  R2=-0.0002
+  Val. cruzada     : MAE=32,309.46 (+/- 548.23), 5 folds, aleatoria
+Archivos generados:
+  models/v-docker/modelo.joblib
+  models/v-docker/metrics.json
+  models/v-docker/metadata.json
+PS C:\Users\juanj\Downloads\fase-2_codigo\fase-2> docker run --rm -v "${PWD}/data:/app/data:ro" -v "${PWD}/models:/app/models:ro" -v "${PWD}/outputs:/app/outputs" modelos-fase2:1.0 python predict.py --model models/v-docker/modelo.joblib --input data/ejemplo_prediccion.csv --output outputs/predicciones.csv
+Version del modelo : v-docker
+Predicciones       : 5 fila(s)
+Archivo generado   : outputs/predicciones.csv
+PS C:\Users\juanj\Downloads\fase-2_codigo\fase-2> Get-ChildItem models, outputs -Recurse
+
+
+    Directorio: C:\Users\juanj\Downloads\fase-2_codigo\fase-2\models
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        05/11/2026     19:56                v-docker
+
+
+    Directorio: C:\Users\juanj\Downloads\fase-2_codigo\fase-2\models\v-docker
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        05/11/2026     19:56           2467 metadata.json
+-a----        05/11/2026     19:56            771 metrics.json
+-a----        05/11/2026     19:56       29252850 modelo.joblib
+
+
+    Directorio: C:\Users\juanj\Downloads\fase-2_codigo\fase-2\outputs
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        05/11/2026     19:56            479 predicciones.csv
