@@ -1,7 +1,5 @@
 # Fase 2 — Scripts y Docker: Predicción de precios de vivienda en California
 
-> **Antes de entregar:** buscar el texto `COMPLETAR` en este archivo (PowerShell: `Select-String -Path README.md -Pattern COMPLETAR`; Bash: `grep -n COMPLETAR README.md`) y reemplazar cada ocurrencia. No debe quedar ninguna.
-
 **Proyecto Integrador — Modelos y Simulación de Sistemas I (2026-II)** · Docente: Andrés Parra
 
 **Integrantes:** Oscar Plaza · Samuel Velásquez · Juan José Durango
@@ -34,7 +32,7 @@ Las correcciones de la retroalimentación se aplicaron primero en `fase-1/` (ver
 | Independencia espacial no discutida | El alcance declarado es estimar distritos en **zonas ya representadas en los datos**; no se pretende generalizar a regiones nuevas. En la Fase 1 v1.1 se midió la sensibilidad con validación por zonas: MAE de validación cruzada de 32.309,46 (aleatoria) a 48.698,39 (por zonas), **+51 %**. En esta fase la opción `--spatial-split` separa por zonas (celdas de 1° de latitud/longitud) y la versión `v2` la usa. |
 | Afirmaciones sobre el tope de 500.001 USD | En la Fase 1 v1.1 se compararon los errores con y sin tope (ver sección 9) y se matizaron las afirmaciones. **No se excluyen ni se tratan** esos registros; `fase-2` no repite ese diagnóstico. |
 | Nombre del tercer integrante inconsistente | Unificado como **Juan José Durango** en el notebook y en los README. |
-| Pull Requests sin revisión formal | En la Fase 1 v1.1 los PR #9 a #12 se fusionaron con aprobación de otro integrante. En esta fase, cada PR hacia `develop` lo aprobó un integrante distinto de su autor. COMPLETAR: confirmar este enunciado con la lista de PR de GitHub antes de entregar y ajustarlo si no es cierto. |
+| Pull Requests sin revisión formal | En la Fase 1 v1.1 los PR #9 a #12 se fusionaron con aprobación de otro integrante. En esta fase el PR #14 (Samuel) lo fusionó Oscar y el PR #15 (Oscar) lo fusionó Samuel. El PR #13 se integró inicialmente en `main` en lugar de `develop`, y el PR #16 lo fusionó su propio autor; ambas desviaciones se detectaron durante la fase, el flujo se reencauzó por `develop` a partir del PR #14 y la integración final en `main` se hace mediante un único Pull Request desde `develop`. |
 
 ## 3. Entorno
 
@@ -121,7 +119,7 @@ Cada `modelo.joblib` pesa unos 15 a 30 MB y se versiona en Git junto con las mé
 
 ## 7. Docker
 
-Imagen base `python:3.14-slim`. El entrenamiento **no** ocurre en `docker build`; se ejecuta al iniciar el contenedor. Los datos se montan desde el equipo y los modelos y resultados **persisten fuera del contenedor**. Terminal usada por el equipo: COMPLETAR (Bash / PowerShell).
+Imagen base `python:3.14-slim`. El entrenamiento **no** ocurre en `docker build`; se ejecuta al iniciar el contenedor. Los datos se montan desde el equipo y los modelos y resultados **persisten fuera del contenedor**. Terminal usada por el equipo: **PowerShell** en Windows.
 
 **PowerShell** (desde `fase-2/`):
 
@@ -225,11 +223,22 @@ Salidas reales de terminal, guardadas en `evidencia/`:
 | [`evidencia/local.txt`](evidencia/local.txt) | entrenamiento y predicción en el entorno local, y el error de una entrada inválida con su código de salida |
 | [`evidencia/docker.txt`](evidencia/docker.txt) | `docker build`, entrenamiento y predicción dentro del contenedor, y el listado de `models/` y `outputs/` en el equipo anfitrión mostrando que los resultados persisten |
 
-COMPLETAR: pegar aquí un extracto breve (3-5 líneas) de la salida del entrenamiento en Docker.
+Extracto del entrenamiento dentro del contenedor (`evidencia/docker.txt`):
+
+```
+Version entrenada: v-docker
+  Algoritmo        : random_forest
+  Particion        : aleatoria (train_test_split) (train=16512, test=4128)
+  Modelo  (prueba) : MAE=31,636.35  RMSE=48,977.06  R2=0.8169
+  Base    (prueba) : MAE=90,606.85  RMSE=114,485.64  R2=-0.0002
+  Val. cruzada     : MAE=32,309.46 (+/- 548.23), 5 folds, aleatoria
+```
+
+Las cifras obtenidas dentro del contenedor coinciden con las de `v1` y con las de la Fase 1 v1.1, de modo que la imagen reproduce el mismo resultado que el entorno local. La versión `v-docker` es evidencia de ejecución y no se versiona en el repositorio.
 
 ## 11. Fuentes consultadas y código externo adaptado
 
 - Documentación de scikit-learn (Pipeline, ColumnTransformer, SimpleImputer, OneHotEncoder, GroupShuffleSplit, cross_validate).
 - Dataset: California Housing Prices (Kaggle, Cam Nugent).
 - La lógica del pipeline se adaptó del notebook de la Fase 1 v1.1 (`fase-1/notebook.ipynb`).
-- COMPLETAR: declarar el uso de asistencia de IA generativa si la política del curso lo exige (por ejemplo: *“La estructura inicial de train.py, predict.py y las pruebas se elaboró con asistencia de Claude; el equipo revisó, ejecutó y comprende el código.”*).
+- **Asistencia de IA generativa.** La estructura inicial de `train.py`, `predict.py`, los módulos de `src/` y las pruebas se elaboró con asistencia de Claude (Anthropic). El equipo revisó el código, lo ejecutó en sus propios entornos y lo comprende; las cifras de este README provienen de ejecuciones propias registradas en `evidencia/`, no de las pruebas del asistente.
