@@ -41,7 +41,7 @@ Proyecto-Modelos-1/
 | Sprint | Estado | Detalle |
 |:---:|:---:|---|
 | **Sprint 1** | ✅ Completado (v1.1, corregido tras la retroalimentación) | [Ver detalles](#-sprint-1--modelo-predictivo-fase-1) |
-| **Sprint 2** | 🔜 Pendiente | Scripts de entrenamiento y predicción |
+| **Sprint 2** | ✅ Completado | Scripts de entrenamiento y predicción, versionamiento, Docker y pruebas (ver [`fase-2/`](fase-2/README.md)) |
 | **Sprint 3** | 🔜 Pendiente | Despliegue con Docker y API REST |
 
 ---
