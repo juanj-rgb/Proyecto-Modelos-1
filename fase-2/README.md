@@ -221,7 +221,7 @@ Salidas reales de terminal, guardadas en `evidencia/`:
 |---|---|
 | [`evidencia/pytest.txt`](evidencia/pytest.txt) | `python -m pytest` (resultado de las pruebas) |
 | [`evidencia/local.txt`](evidencia/local.txt) | entrenamiento y predicción en el entorno local, y el error de una entrada inválida con su código de salida |
-| [`evidencia/docker.txt`](evidencia/docker.txt) | `docker build`, entrenamiento y predicción dentro del contenedor, y el listado de `models/` y `outputs/` en el equipo anfitrión mostrando que los resultados persisten |
+| [`evidencia/docker.txt`](evidencia/docker.txt) | entrenamiento y predicción dentro del contenedor, y el listado de `models/` y `outputs/` en el equipo anfitrión mostrando que los resultados persisten |
 
 Extracto del entrenamiento dentro del contenedor (`evidencia/docker.txt`):
 
