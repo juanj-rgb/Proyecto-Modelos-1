@@ -1,6 +1,6 @@
 {
-  "version": "v-docker",
-  "created_at": "2026-11-03T22:34:40+00:00",
+  "version": "v1",
+  "created_at": "2026-11-04T16:51:03+00:00",
   "problem_type": "regression",
   "target": "median_house_value",
   "algorithm": "random_forest",
@@ -53,7 +53,11 @@
     },
     "known_categories": {
       "ocean_proximity": [
-        "NEAR BAY"
+        "<1H OCEAN",
+        "INLAND",
+        "ISLAND",
+        "NEAR BAY",
+        "NEAR OCEAN"
       ]
     }
   },
@@ -63,26 +67,26 @@
   },
   "data": {
     "file": "housing.csv",
-    "sha256": "282f2144d4255ee0d78904dde3cbd9858fbce4e545642b46fc1bcbd6f7204654",
-    "n_rows_read": 10,
-    "n_rows_used": 10,
+    "sha256": "8a3727f4cf54ac1a327f69b1d5b4db54c5834ea81c6e4efc0d163300022a685e",
+    "n_rows_read": 20640,
+    "n_rows_used": 20640,
     "n_rows_dropped_missing_target": 0
   },
   "split": {
     "strategy": "aleatoria (train_test_split)",
     "test_size": 0.2,
-    "n_train": 8,
-    "n_test": 2
+    "n_train": 16512,
+    "n_test": 4128
   },
   "evaluation_metric": "MAE (principal); tambien RMSE y R2",
   "environment": {
-    "python": "3.14.10",
+    "python": "3.14.5",
     "scikit-learn": "1.9.1",
     "pandas": "3.0.6",
     "numpy": "2.4.6",
     "joblib": "1.6.0",
     "requirements_file": "requirements.txt"
   },
-  "code_reference": "unknown",
+  "code_reference": "5352fc4e0593917b2d3d75a15099f6f293f7e544",
   "reproducibility_notes": "Con los mismos datos, parametros, semilla y versiones de librerias se esperan los mismos resultados."
 }

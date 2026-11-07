@@ -242,3 +242,30 @@ def test_help_funciona_en_ambos_scripts():
                               capture_output=True, text=True)
         assert proc.returncode == 0
         assert "--help" in proc.stdout or "usage" in proc.stdout.lower()
+
+
+def test_test_size_invalido_falla_y_no_deja_version_a_medias(csv_entrenamiento, tmp_path):
+    """La fraccion de prueba debe estar en el intervalo abierto (0, 1).
+
+    Un valor fuera de rango tiene que detenerse ANTES de entrenar: si se dejara
+    pasar, `train_test_split` fallaria mas adelante con un mensaje de scikit-learn
+    dificil de interpretar, o -peor- produciria una particion degenerada (todo a
+    entrenamiento o todo a prueba) y las metricas no significarian nada.
+    """
+    models = tmp_path / "models"
+
+    # (a) A nivel de funcion: el mensaje nombra el parametro y el valor recibido.
+    datos = hacer_datos(n=40, seed=3)
+    y = datos.pop(TARGET)
+    for valor in (-0.2, 0.0, 1.0, 1.5):
+        with pytest.raises(AplicacionError, match="--test-size"):
+            split_data(datos, y, test_size=valor, seed=42, spatial=False)
+
+    # Un valor valido del borde si pasa, para no estar probando solo el rechazo.
+    X_tr, X_te, y_tr, y_te = split_data(datos, y, test_size=0.25, seed=42, spatial=False)
+    assert len(X_te) == 10 and len(X_tr) == 30
+    assert len(X_tr) + len(X_te) == len(datos)
+
+    # (b) Por linea de comandos: codigo distinto de cero y sin version a medias.
+    assert entrenar(csv_entrenamiento, models, "v_mala", extra=["--test-size", "1.5"]) != 0
+    assert not (models / "v_mala").exists()

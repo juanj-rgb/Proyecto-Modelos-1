@@ -1,0 +1,65 @@
+Evidencia de ejecucion local (Windows, PowerShell, Python 3.14.5, entorno virtual de fase-2)
+Fecha: 2026-11-04. Codigo: develop en 5352fc4 (merge del PR #14). Datos: housing.csv de la Fase 1.
+
+=== Entrenamiento v1 ===
+PS> python train.py --data data/housing.csv --target median_house_value --output-dir models --version v1 --seed 42
+Version entrenada: v1
+  Algoritmo        : random_forest
+  Particion        : aleatoria (train_test_split) (train=16512, test=4128)
+  Modelo  (prueba) : MAE=31,636.35  RMSE=48,977.06  R2=0.8169
+  Base    (prueba) : MAE=90,606.85  RMSE=114,485.64  R2=-0.0002
+  Val. cruzada     : MAE=32,309.46 (+/- 548.23), 5 folds, aleatoria
+Archivos generados:
+  models\v1\modelo.joblib
+  models\v1\metrics.json
+  models\v1\metadata.json
+
+=== Entrenamiento v2 ===
+PS> python train.py --data data/housing.csv --target median_house_value --output-dir models --version v2 --seed 42 --spatial-split --n-estimators 50
+Version entrenada: v2
+  Algoritmo        : random_forest
+  Particion        : por zonas (GroupShuffleSplit, celdas de 1 grado) (train=14410, test=6230)
+  Modelo  (prueba) : MAE=46,611.58  RMSE=70,691.64  R2=0.6555
+  Base    (prueba) : MAE=99,167.70  RMSE=121,760.81  R2=-0.0220
+  Val. cruzada     : MAE=53,559.91 (+/- 8,908.91), 5 folds, por zonas
+Archivos generados:
+  models\v2\modelo.joblib
+  models\v2\metrics.json
+  models\v2\metadata.json
+
+=== Prediccion con v1 y con v2 ===
+PS> python predict.py --model models/v1/modelo.joblib --input data/ejemplo_prediccion.csv --output outputs/pred_v1.csv
+Version del modelo : v1
+Predicciones       : 5 fila(s)
+Archivo generado   : outputs\pred_v1.csv
+PS> python predict.py --model models/v2 --input data/ejemplo_prediccion.csv --output outputs/pred_v2.csv
+Version del modelo : v2
+Predicciones       : 5 fila(s)
+Archivo generado   : outputs\pred_v2.csv
+
+=== Entrada invalida: version repetida (no se sobrescribe) ===
+PS> python train.py --data data/housing.csv --output-dir models --version v1
+ERROR: La version 'v1' ya existe en models. No se sobrescribe: usa otro --version o omitelo para generar un identificador nuevo.
+PS> $LASTEXITCODE
+1
+
+=== Archivos generados y tamanos ===
+FullName                                                                       MB
+--------                                                                       --
+C:\Users\HP_Mini\Documents\Proyecto-Modelos-1\fase-2\models\v1\metadata.json    0
+C:\Users\HP_Mini\Documents\Proyecto-Modelos-1\fase-2\models\v1\metrics.json     0
+C:\Users\HP_Mini\Documents\Proyecto-Modelos-1\fase-2\models\v1\modelo.joblib 28,2
+C:\Users\HP_Mini\Documents\Proyecto-Modelos-1\fase-2\models\v2\metadata.json    0
+C:\Users\HP_Mini\Documents\Proyecto-Modelos-1\fase-2\models\v2\metrics.json     0
+C:\Users\HP_Mini\Documents\Proyecto-Modelos-1\fase-2\models\v2\modelo.joblib 12,4
+
+=== Referencia del codigo en los metadatos ===
+PS> Get-Content models\v1\metadata.json | Select-String code_reference
+  "code_reference": "5352fc4e0593917b2d3d75a15099f6f293f7e544",
+PS> Get-Content models\v2\metadata.json | Select-String code_reference
+  "code_reference": "5352fc4e0593917b2d3d75a15099f6f293f7e544",
+(sin sufijo -dirty: el entrenamiento se hizo con el arbol de trabajo limpio)
+
+=== Comparacion con la Fase 1 v1.1 ===
+v1 reproduce las cifras de la Fase 1 v1.1: MAE de prueba 31.636,35; RMSE 48.977,06; R2 0,8169;
+MAE del modelo base 90.606,85; MAE de validacion cruzada 32.309,46.
