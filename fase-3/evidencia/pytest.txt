@@ -1,0 +1,27 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.7.0 -- C:\TRABAJOS-UDEA\MODELOS-1\Proyecto-Modelos-1\fase-3\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\TRABAJOS-UDEA\MODELOS-1\Proyecto-Modelos-1\fase-3
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 16 items
+
+tests/test_api.py::test_health_responde_siempre_aunque_no_haya_modelo PASSED [  6%]
+tests/test_api.py::test_health_reporta_el_modelo_cuando_ya_existe PASSED [ 12%]
+tests/test_api.py::test_versiones_lista_lo_guardado PASSED               [ 18%]
+tests/test_api.py::test_predict_devuelve_un_valor_numerico PASSED        [ 25%]
+tests/test_api.py::test_predict_admite_null_solo_en_total_bedrooms PASSED [ 31%]
+tests/test_api.py::test_predict_ignora_campos_de_mas PASSED              [ 37%]
+tests/test_api.py::test_predict_sin_un_campo_obligatorio_responde_422_y_lo_nombra PASSED [ 43%]
+tests/test_api.py::test_predict_con_tipo_incompatible_responde_422 PASSED [ 50%]
+tests/test_api.py::test_predict_rechaza_cualquier_valor_que_no_sea_un_numero_finito PASSED [ 56%]
+tests/test_api.py::test_predict_con_categoria_desconocida_responde_422_y_lista_las_validas PASSED [ 62%]
+tests/test_api.py::test_predict_sin_modelo_responde_503_y_explica_como_resolverlo PASSED [ 68%]
+tests/test_api.py::test_train_crea_una_version_nueva_con_sus_artefactos PASSED [ 75%]
+tests/test_api.py::test_train_no_sobrescribe_una_version_existente PASSED [ 81%]
+tests/test_api.py::test_train_sin_datos_responde_503 PASSED              [ 87%]
+tests/test_api.py::test_train_y_predict_usan_el_mismo_esquema PASSED     [ 93%]
+tests/test_api.py::test_el_ejemplo_de_solicitud_es_valido PASSED         [100%]
+
+============================= 16 passed in 5.82s ==============================
