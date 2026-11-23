@@ -1,0 +1,34 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.7.0 -- C:\TRABAJOS-UDEA\MODELOS-1\Proyecto-Modelos-1\fase-3\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\TRABAJOS-UDEA\MODELOS-1\Proyecto-Modelos-1\fase-4
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 23 items
+
+tests/test_api.py::test_health_responde_200 PASSED                       [  4%]
+tests/test_api.py::test_entrada_valida_devuelve_prediccion_y_version PASSED [  8%]
+tests/test_api.py::test_entrada_con_campo_obligatorio_ausente_se_rechaza PASSED [ 13%]
+tests/test_api.py::test_la_api_da_el_mismo_valor_que_el_modelo_guardado PASSED [ 17%]
+tests/test_api.py::test_la_variable_objetivo_no_es_necesaria_y_si_llega_se_ignora PASSED [ 21%]
+tests/test_api.py::test_total_bedrooms_acepta_null_y_se_imputa PASSED    [ 26%]
+tests/test_api.py::test_otro_campo_numerico_no_admite_null PASSED        [ 30%]
+tests/test_api.py::test_tipo_incompatible_se_rechaza_con_el_nombre_del_campo PASSED [ 34%]
+tests/test_api.py::test_categoria_desconocida_se_rechaza PASSED          [ 39%]
+tests/test_api.py::test_cuerpo_que_no_es_json_o_no_es_objeto_se_rechaza PASSED [ 43%]
+tests/test_api.py::test_modelo_no_disponible_devuelve_503_y_explica_como_elegir_version PASSED [ 47%]
+tests/test_api.py::test_train_guarda_version_nueva_sin_tocar_las_anteriores PASSED [ 52%]
+tests/test_api.py::test_train_con_cuerpo_vacio_genera_un_identificador_disponible PASSED [ 56%]
+tests/test_api.py::test_train_sin_datos_devuelve_503 PASSED              [ 60%]
+tests/test_api.py::test_train_rechaza_identificador_invalido PASSED      [ 65%]
+tests/test_registro.py::test_cada_intento_genera_una_sola_fila_incluido_el_rechazado PASSED [ 69%]
+tests/test_registro.py::test_la_prediccion_registrada_es_la_que_devolvio_la_api PASSED [ 73%]
+tests/test_registro.py::test_encabezado_una_sola_vez_y_el_historial_se_conserva_entre_ejecuciones PASSED [ 78%]
+tests/test_registro.py::test_503_y_categoria_desconocida_tambien_se_registran PASSED [ 82%]
+tests/test_registro.py::test_las_otras_rutas_no_se_registran PASSED      [ 86%]
+tests/test_registro.py::test_monitor_muestra_3_solicitudes_y_33_3_por_ciento PASSED [ 91%]
+tests/test_registro.py::test_monitor_con_registro_vacio_indica_sin_solicitudes PASSED [ 95%]
+tests/test_registro.py::test_monitor_cuenta_como_fallidos_los_4xx_y_5xx PASSED [100%]
+
+============================= 23 passed in 3.58s ==============================
