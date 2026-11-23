@@ -27,3 +27,9 @@ fase-2/venv/
 
 # Excepcion: el ejemplo de prediccion si se versiona
 !fase-2/data/ejemplo_prediccion.csv
+
+# fase-3 y fase-4
+fase-2/models/v20*/
+fase-3/models/
+fase-4/logs/
+!fase-4/evidencia/registro_muestra.csv

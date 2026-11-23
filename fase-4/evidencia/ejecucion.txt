@@ -1,0 +1,66 @@
+﻿
+Comprobacion de la Fase 4
+Fecha: 2026-11-22 22:56:29
+Equipo: SAMUELVB  Â·  PowerShell 5.1.26100.9818
+Commit: 0b869623835f354c7772af52eff61e25a686b9c3
+Python: Python 3.13.7
+
+==============================================================
+PS> python -m pytest   (evidencia completa en evidencia\pytest.txt)
+==============================================================
+  ============================= 23 passed in 3.58s ==============================
+
+==============================================================
+PS> python -m uvicorn api:app --host 127.0.0.1 --port 8000
+==============================================================
+  API en ejecucion. MODEL_VERSION=v1. Registro: fase-4\logs\solicitudes.csv
+
+==============================================================
+PS> python cliente_prueba.py                                      (valida 1)
+==============================================================
+GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
+POST /predict  solicitud: {"longitude": -122.23, "latitude": 37.88, "housing_median_age": 41.0, "total_rooms": 880.0, "total_bedrooms": 129.0, "population": 322.0, "households": 126.0, "median_income": 8.3252, "ocean_proximity": "NEAR BAY"}
+POST /predict  -> 200 {"prediccion": 431942.36, "version": "v1"}
+
+==============================================================
+PS> python cliente_prueba.py --csv ..\fase-2\data\ejemplo_prediccion.csv --fila 2   (valida 2)
+==============================================================
+GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
+POST /predict  solicitud: {"longitude": -122.22, "latitude": 37.86, "housing_median_age": 21.0, "total_rooms": 7099.0, "total_bedrooms": 1106.0, "population": 2401.0, "households": 1138.0, "median_income": 8.3014, "ocean_proximity": "NEAR BAY"}
+POST /predict  -> 200 {"prediccion": 388912.02, "version": "v1"}
+
+==============================================================
+PS> python cliente_prueba.py --quitar median_income               (invalida: 422)
+==============================================================
+GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
+POST /predict  solicitud: {"longitude": -122.23, "latitude": 37.88, "housing_median_age": 41.0, "total_rooms": 880.0, "total_bedrooms": 129.0, "population": 322.0, "households": 126.0, "ocean_proximity": "NEAR BAY"}
+POST /predict  -> 422 {"error": "entrada_invalida", "mensaje": "La entrada no es valida. median_income: campo obligatorio ausente", "detalle": [{"campo": "median_income", "problema": "campo obligatorio ausente"}]}
+
+==============================================================
+PS> Get-Content logs\solicitudes.csv                              (el registro)
+==============================================================
+fecha_hora,estado_http,version,prediccion
+2026-11-22T22:56:47,200,v1,431942.36
+2026-11-22T22:56:52,200,v1,388912.02
+2026-11-22T22:56:56,422,,
+
+==============================================================
+PS> python monitor.py                                             (indicadores)
+==============================================================
+Registro                : logs/solicitudes.csv
+Total de solicitudes    : 3
+Solicitudes fallidas    : 1 (HTTP 4xx o 5xx)
+Porcentaje de fallos    : 33,3 %
+Solicitudes por version : v1: 2
+
+==============================================================
+PS> python monitor.py --log evidencia\registro_muestra.csv        (sobre la muestra entregada)
+==============================================================
+Registro                : evidencia\registro_muestra.csv
+Total de solicitudes    : 3
+Solicitudes fallidas    : 1 (HTTP 4xx o 5xx)
+Porcentaje de fallos    : 33,3 %
+Solicitudes por version : v1: 2
+
+==============================================================
+Fin de la comprobacion.
