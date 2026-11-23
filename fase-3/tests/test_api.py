@@ -64,6 +64,15 @@ def test_predict_admite_null_solo_en_total_bedrooms(cliente, modelo_entrenado):
     assert r.status_code == 422
     assert "median_income" in r.text
 
+    # Enviar null y omitir el campo NO son lo mismo: null es un dato ausente conocido
+    # y se imputa; omitirlo es una solicitud incompleta y se rechaza. Sin esta
+    # comprobacion, darle un valor por defecto a total_bedrooms pasaria inadvertido
+    # y la API predeciria sobre un dato inventado.
+    registro = {k: v for k, v in REGISTRO_VALIDO.items() if k != "total_bedrooms"}
+    r = cliente.post("/predict", json=registro)
+    assert r.status_code == 422, r.text
+    assert "total_bedrooms" in r.text
+
 
 def test_predict_ignora_campos_de_mas(cliente, modelo_entrenado):
     """Un cliente puede mandar la variable objetivo o columnas extra: se ignoran
@@ -96,6 +105,47 @@ def test_predict_con_tipo_incompatible_responde_422(cliente, modelo_entrenado):
     cuerpo = r.json()
     assert cuerpo["error"] == "entrada_invalida"
     assert any(d["campo"] == "median_income" for d in cuerpo["detalle"])
+
+
+def test_predict_rechaza_cualquier_valor_que_no_sea_un_numero_finito(cliente, modelo_entrenado):
+    """Prueba agregada en la revision del PR.
+
+    La prueba anterior cubre un caso puntual: un texto en median_income. Esta comprueba
+    que la regla vale para otro campo (longitude) y para seis formas distintas de valor
+    invalido, dos de las cuales no vigilaba ninguna prueba:
+
+      - booleano: en JSON, true no es 1. El esquema esta declarado estricto (Field
+        strict=True) justamente para que no se convierta solo.
+      - NaN e Infinity: JSON estricto no los admite, pero varios clientes los emiten.
+        Si uno pasara, el modelo predeciria sobre un valor sin sentido en silencio,
+        que es el peor desenlace posible: respuesta 200 con un numero inventado.
+
+    Los seis casos se envian como cuerpo crudo, no con json=, porque NaN e Infinity
+    no se pueden construir desde un diccionario de Python sin que el cliente los
+    rechace antes de salir.
+    """
+    def cuerpo_con_longitude(literal: str) -> str:
+        partes = [f'"{clave}": ' + (literal if clave == "longitude" else json.dumps(valor))
+                  for clave, valor in REGISTRO_VALIDO.items()]
+        return "{" + ", ".join(partes) + "}"
+
+    casos = {
+        "texto": '"abc"',
+        "booleano": "true",
+        "NaN": "NaN",
+        "Infinity": "Infinity",
+        "lista": "[1, 2]",
+        "nulo": "null",
+    }
+    for etiqueta, literal in casos.items():
+        r = cliente.post("/predict", content=cuerpo_con_longitude(literal),
+                         headers={"Content-Type": "application/json"})
+        assert r.status_code == 422, f"{etiqueta}: se esperaba 422, llego {r.status_code}: {r.text}"
+        cuerpo = r.json()
+        assert cuerpo["error"] == "entrada_invalida", f"{etiqueta}: {cuerpo}"
+        campos = [d["campo"] for d in cuerpo["detalle"]]
+        assert "longitude" in campos, f"{etiqueta}: el error no nombra el campo: {cuerpo}"
+        assert "longitude" in cuerpo["mensaje"], f"{etiqueta}: {cuerpo['mensaje']}"
 
 
 def test_predict_con_categoria_desconocida_responde_422_y_lista_las_validas(
