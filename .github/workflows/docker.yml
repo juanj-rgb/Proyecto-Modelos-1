@@ -1,0 +1,58 @@
+# Demostracion de la Fase 3 en Docker, ejecutada por GitHub Actions
+# (maquina Ubuntu con Docker). Se lanza a mano desde la pestana Actions
+# ("Run workflow") o al abrir un PR hacia develop que toque fase-3.
+name: docker-fase-3
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [develop]
+    paths:
+      - "fase-3/**"
+      - "fase-2/src/**"
+      - "fase-2/train.py"
+      - ".github/workflows/docker.yml"
+
+jobs:
+  fase-3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: "01 - Construir la imagen (contexto: raiz del repositorio)"
+        run: docker build -f fase-3/Dockerfile -t api-vivienda:3.0 --build-arg GIT_COMMIT=${{ github.sha }} .
+
+      - name: Pruebas pytest dentro de la imagen
+        run: docker run --rm api-vivienda:3.0 python -m pytest -v
+
+      - name: "01 - Arrancar la API (0.0.0.0, -p 8000:8000, montajes de modelos y datos)"
+        run: |
+          docker run -d --name api -p 8000:8000 \
+            -v "$PWD/fase-2/models:/app/models" \
+            -v "$PWD/fase-2/data:/app/data:ro" \
+            api-vivienda:3.0
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/health > /dev/null && break
+            sleep 2
+          done
+
+      - name: "02 - /health y /predict desde fuera del contenedor"
+        run: |
+          echo "== GET /health"
+          curl -s -i http://localhost:8000/health; echo
+          echo "== POST /predict con ejemplo_solicitud.json (esperado: 431942.36, v1)"
+          python3 fase-3/cliente_prueba.py
+          echo "== POST /predict con la fila 2 del CSV de ejemplo"
+          python3 fase-3/cliente_prueba.py --csv fase-2/data/ejemplo_prediccion.csv --fila 2
+          echo "== POST /predict sin median_income (esperado: 422)"
+          python3 fase-3/cliente_prueba.py --quitar median_income || true
+
+      - name: "03 - POST /train (housing.csv no esta en el repositorio: se espera 503 datos_no_disponibles)"
+        run: |
+          curl -s -i -X POST http://localhost:8000/train; echo
+          ls fase-2/models
+
+      - name: Registro del contenedor
+        if: always()
+        run: docker logs api
