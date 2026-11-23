@@ -1,256 +1,270 @@
-# Fase 3 — API REST: Predicción de precios de vivienda en California
+# Fase 3 — API REST: consultar el modelo y entrenar versiones por HTTP
 
 **Proyecto Integrador — Modelos y Simulación de Sistemas I (2026-II)** · Docente: Andrés Parra
 
 **Integrantes:** Oscar Plaza · Samuel Velásquez · Juan José Durango
 
-La Fase 3 expone por HTTP el mismo modelo de la Fase 2. No se reentrena nada ni se cambia el pipeline: la API carga una versión ya guardada en `fase-2/models/` y le aplica el preprocesamiento registrado en su `metadata.json`. Las carpetas `fase-1/` y `fase-2/` se conservan sin modificar.
+**Versión entregada (Entrega 3):** etiqueta de Git `entrega-3` (`git checkout entrega-3` deja el repositorio en el estado evaluado). Es distinta de los identificadores de modelo (`v1`, `v2`).
 
-## 1. Qué hace la API
+## 1. Qué es y cómo se relaciona con las fases anteriores
 
-| Operación | Respuesta | Qué hace |
+Una API (FastAPI) que pone el modelo de la Fase 2 detrás de tres operaciones HTTP. **No reimplementa nada**: reutiliza el código de `fase-2/` sin modificarlo.
+
+| Operación | Qué hace | Qué reutiliza de la Fase 2 |
 |---|---|---|
-| `GET /health` | 200 | Indica que la API está en ejecución; informa la versión configurada y si está disponible. |
-| `GET /versiones` | 200 | Lista las versiones guardadas y cuál se usa para predecir. |
-| `POST /predict` | 200 | Recibe un registro JSON con las 9 variables predictoras, carga la versión configurada, aplica sus transformaciones y devuelve el valor estimado y la versión usada. |
-| `POST /train` | 201 | Entrena con los datos y la configuración de la Fase 2 y guarda una **versión nueva** con su modelo, métricas y metadatos. No sobrescribe las anteriores. |
+| `GET /health` | Indica que la API está en ejecución (HTTP 200). | — |
+| `POST /predict` | Recibe un distrito en JSON, carga la versión configurada y devuelve la predicción y la versión usada. | `modelo.joblib` (el `Pipeline` con el preprocesamiento guardado), `metadata.json` (esquema de entrada) y `src.data.prepare_prediction_frame`. |
+| `POST /train` | Entrena con los datos y la configuración de la Fase 2 y guarda una **versión nueva** (modelo, métricas y metadatos). | `train.run_training`, la misma función que usa `train.py`. |
 
-`GET /versiones` no la pide la especificación; se agregó porque es la forma de averiguar qué identificadores existen antes de cambiar la versión activa.
+Además hay `GET /versiones` (lista las versiones guardadas y la configurada) y la documentación interactiva de FastAPI en `/docs`.
 
-Reutilización del código de la Fase 2, sin copiarlo ni modificarlo:
+`fase-1/` y `fase-2/` se conservan sin cambios.
 
-| La API usa | De la Fase 2 |
-|---|---|
-| Preprocesamiento de datos nuevos | `src.data.prepare_prediction_frame` con el `input_schema` de `metadata.json` |
-| Carga del modelo | `modelo.joblib` (pipeline completo: imputación + codificación + modelo) |
-| Entrenamiento | `train.run_training`, la misma función que usa `train.py` |
-| Validación de identificadores de versión | `src.versioning` |
+## 2. Estructura de `fase-3/`
 
-Documentación interactiva generada por FastAPI: `http://localhost:8000/docs`.
+```
+fase-3/
+├── api.py                  # la API (rutas, validación, carga del modelo)
+├── cliente_prueba.py       # cliente sencillo: consulta /health y envía una predicción
+├── ejemplo_solicitud.json  # primera fila de fase-2/data/ejemplo_prediccion.csv, como JSON
+├── requirements.txt        # dependencias con versiones fijas
+├── Dockerfile              # se construye desde la RAIZ del repositorio
+├── Dockerfile.dockerignore
+├── pytest.ini
+├── tests/                  # conftest.py y test_api.py
+├── evidencia/              # salidas reales de terminal (pytest, docker)
+└── README.md
+```
 
-## 2. Entorno
+## 3. Entorno local (PowerShell, desde `fase-3/`)
+
+Python **3.14.5** (el del equipo; la imagen Docker usa `python:3.14-slim`).
 
 ```powershell
 cd fase-3
 python -m venv venv
-venv\Scripts\Activate.ps1        # PowerShell. En Bash: source venv/bin/activate
+venv\Scripts\Activate.ps1            # si se bloquea: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 pip install -r requirements.txt
 ```
 
-`requirements.txt` agrega al conjunto de la Fase 2 las dependencias del servicio con versiones fijas: `fastapi`, `starlette`, `pydantic`, `uvicorn` y `httpx2` (esta última la necesita el cliente de pruebas de Starlette). Probado con Python 3.13 y 3.14; la imagen Docker usa `python:3.14-slim`.
-
-**Los comandos de las secciones 3 a 5 se ejecutan desde `fase-3/`.** Los de Docker (sección 6) se ejecutan desde la **raíz del repositorio**, porque la imagen necesita también `fase-2/`.
-
-## 3. Arranque local
-
-```powershell
-python -m uvicorn api:app --host 127.0.0.1 --port 8000
-```
-
-Sin variables de entorno, la API toma los modelos de `fase-2/models/`, los datos de `fase-2/data/housing.csv` y predice con `v1`.
+El entorno virtual está ignorado por Git. La API importa `src/` y `train.py` de `../fase-2` por sí sola; no hay que copiar nada.
 
 ## 4. Configuración
 
-Se configura con variables de entorno; se leen en cada solicitud, de modo que basta reiniciar el proceso para cambiar de versión.
+Se hace con variables de entorno, que se leen en cada solicitud. Los valores por defecto sirven para trabajar desde el repositorio.
 
-| Variable | Valor por defecto | Para qué sirve |
-|---|---|---|
-| `MODEL_VERSION` | `v1` | Versión que usa `POST /predict`. |
-| `MODELS_DIR` | `fase-2/models` | Carpeta con las versiones guardadas. |
-| `DATA_PATH` | `fase-2/data/housing.csv` | CSV con el que entrena `POST /train`. |
-| `TARGET` | `median_house_value` | Variable objetivo del entrenamiento. |
-| `SEED` | `42` | Semilla del entrenamiento. |
+| Variable | Qué controla | Por defecto (local) | En Docker |
+|---|---|---|---|
+| `MODEL_VERSION` | **Versión que usa `/predict`** | `v1` | `v1` |
+| `MODELS_DIR` | Carpeta con las versiones guardadas (`<MODELS_DIR>/<version>/`) | `fase-2/models` | `/app/models` (montaje) |
+| `DATA_PATH` | CSV con el que entrena `/train` | `fase-2/data/housing.csv` | `/app/data/housing.csv` (montaje) |
+| `TARGET` | Variable objetivo | `median_house_value` | igual |
+| `SEED` | Semilla de `/train` | `42` | igual |
 
-### Seleccionar la versión disponible
+## 5. Ejecutar
 
-`GET /versiones` lista los identificadores existentes. Para predecir con otro, se define `MODEL_VERSION` y se reinicia la API:
+### Local
 
 ```powershell
-# Local (PowerShell), desde fase-3/
-$env:MODEL_VERSION = "v2"
+# desde fase-3/, con el entorno virtual activo
 python -m uvicorn api:app --host 127.0.0.1 --port 8000
-
-# Docker: se pasa al contenedor
-docker run --rm -p 8000:8000 -e MODEL_VERSION=v2 ... api-vivienda:3.0
 ```
 
-Para volver a la versión anterior se repite el procedimiento con `v1`. Si la versión configurada no existe o sus archivos no se pueden cargar, la API responde **503** y el cuerpo incluye `versiones_disponibles` y la indicación de cómo seleccionarla; `GET /health` sigue respondiendo 200 con `"modelo_disponible": false`.
+Datos de entrenamiento: `housing.csv` debe estar en `fase-2\data\` (está ignorado por Git; se copia de la Fase 1: `Copy-Item ..\fase-1\data\housing.csv ..\fase-2\data\housing.csv`). Para predecir basta con que existan `fase-2\models\v1` y `v2`, que ya están en el repositorio.
 
-## 5. Contrato de entrada y salida
+### Docker
 
-Un registro de `POST /predict` lleva las 9 variables predictoras de la Fase 2, con los mismos nombres y tipos usados al entrenar: los números como números JSON y la categoría como texto. La variable objetivo no hace falta; si llega, se ignora, igual que cualquier otro campo de más.
+Se construye **desde la raíz del repositorio** (el contexto debe incluir `fase-2/` y `fase-3/`):
 
-| Campo | Tipo | Nulo |
-|---|---|---|
-| `longitude`, `latitude`, `housing_median_age`, `total_rooms`, `population`, `households`, `median_income` | número | no |
-| `total_bedrooms` | número | **sí** (`null`): se imputa con la mediana aprendida en el entrenamiento, la regla guardada en la Fase 2 |
-| `ocean_proximity` | texto: `<1H OCEAN`, `INLAND`, `ISLAND`, `NEAR BAY`, `NEAR OCEAN` | no |
+```powershell
+cd <raiz del repositorio>
+docker build -f fase-3/Dockerfile -t api-vivienda:3.0 --build-arg GIT_COMMIT=$(git rev-parse HEAD) .
+docker run --rm -p 8000:8000 `
+  -v "${PWD}/fase-2/models:/app/models" `
+  -v "${PWD}/fase-2/data:/app/data:ro" `
+  api-vivienda:3.0
+```
 
-Solo `total_bedrooms` admite `null` porque es la única variable con valores faltantes en los datos de entrenamiento; para las demás, un `null` sería un dato inventado y no un dato ausente conocido.
+(En Bash, el mismo comando con `\` en lugar de `` ` `` y `$(pwd)` en lugar de `${PWD}`.)
 
-**Ejemplo de solicitud** (es el contenido de `ejemplo_solicitud.json`, tomado de la primera fila del CSV del proyecto):
+| Tema | Cómo queda |
+|---|---|
+| Puerto | `8000` del contenedor publicado en `8000` del equipo (`-p 8000:8000`). El servidor escucha en `0.0.0.0` dentro del contenedor. |
+| Datos | `fase-2/data` se monta en `/app/data` **solo lectura**; `/train` lee de ahí `housing.csv`. |
+| Modelos | `fase-2/models` se monta en `/app/models` **con escritura**: `/predict` lee de ahí y `/train` guarda ahí las versiones nuevas, que **persisten** al detener el contenedor. |
+| Entrenamiento | No ocurre en `docker build`. |
+
+Las versiones que crea `/train` con identificador automático (`v2026…`) quedan en `fase-2/models/` pero **Git las ignora** (`fase-2/models/v20*/`), para no subir por accidente otro modelo de decenas de MB.
+
+Si la etiqueta `python:3.14-slim` no se descarga, cambiar la primera línea del `Dockerfile` a `python:3.12-slim`.
+
+**Dónde se demostró.** La demostración en Docker se ejecutó en **GitHub Actions** (máquina Ubuntu con Docker), con los mismos comandos de esta sección, porque los integrantes presentes no tenían Docker instalado. El flujo está en `.github/workflows/docker.yml` y el registro completo en `evidencia/docker.txt` (sección 12). Cualquiera puede repetirla desde la pestaña *Actions* del repositorio o en un equipo con Docker con los comandos de arriba.
+
+## 6. Operaciones
+
+### `GET /health`
 
 ```json
-{
-  "longitude": -122.23, "latitude": 37.88, "housing_median_age": 41.0,
-  "total_rooms": 880.0, "total_bedrooms": 129.0, "population": 322.0,
-  "households": 126.0, "median_income": 8.3252, "ocean_proximity": "NEAR BAY"
-}
+{"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
 ```
 
-**Respuesta** (HTTP 200): el valor mediano de vivienda estimado, en USD, y la versión que lo produjo.
+Siempre responde 200 mientras el proceso funcione; `modelo_disponible` avisa si la versión configurada existe.
 
+### `POST /predict`
+
+**Del CSV al JSON.** Cada columna predictora de `fase-2/data/ejemplo_prediccion.csv` es una clave; un número se envía como **número**, la categoría como **texto** y un dato faltante como `null`. Se envían las 9 variables:
+
+| Variable | Tipo JSON | ¿Admite `null`? |
+|---|---|---|
+| `longitude`, `latitude`, `housing_median_age`, `total_rooms`, `population`, `households`, `median_income` | número | No |
+| `total_bedrooms` | número | **Sí** (se imputa con la mediana aprendida en el entrenamiento, la regla de la Fase 2) |
+| `ocean_proximity` | texto: `<1H OCEAN`, `INLAND`, `ISLAND`, `NEAR BAY` o `NEAR OCEAN` | No |
+
+La variable objetivo (`median_house_value`) **no hace falta**; si llega, se ignora. La clave de cada variable es obligatoria aunque su valor sea `null`.
+
+Solicitud y respuesta (con el modelo real `v1`; el valor coincide con el del modelo de la Fase 1 para ese distrito):
+
+```json
+{"longitude": -122.23, "latitude": 37.88, "housing_median_age": 41.0, "total_rooms": 880.0,
+ "total_bedrooms": 129.0, "population": 322.0, "households": 126.0, "median_income": 8.3252,
+ "ocean_proximity": "NEAR BAY"}
+```
 ```json
 {"prediccion": 431942.36, "version": "v1"}
 ```
 
-### Errores
+Con `curl` (en PowerShell hay que escribir `curl.exe`, porque `curl` es un alias de otro comando):
 
-Todos devuelven un JSON con `error` y `mensaje`; los de validación agregan `detalle` con el campo y el problema.
+```powershell
+curl.exe -s -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d "@ejemplo_solicitud.json"
+```
 
-| Situación | Código | Mensaje |
+**Errores** (siempre un JSON con `error` y `mensaje`):
+
+| Caso | Código | Ejemplo de mensaje |
 |---|---|---|
-| Falta un campo obligatorio | 422 | `median_income: campo obligatorio ausente` |
-| Tipo incompatible | 422 | `median_income: tipo incompatible: se esperaba numero (se recibio str)` |
-| `null` en un campo que no lo admite | 422 | `no admite null (solo total_bedrooms admite null)` |
-| Categoría no vista en entrenamiento | 422 | `ocean_proximity: categoria desconocida 'NEAR LAKE'. Categorias validas: [...]` |
-| El cuerpo no es un objeto JSON válido | 422 | `(cuerpo): el cuerpo no es un JSON valido` |
-| La versión configurada no está disponible | 503 | `La version 'vX' no esta disponible en ...` + `versiones_disponibles` |
-| `POST /train` sin el archivo de datos | 503 | `No se encuentra el archivo de datos ...` |
-| `POST /train` con un identificador ya usado | 409 | la versión existe y no se sobrescribe |
+| Falta una variable | **422** | `La entrada no es valida. median_income: campo obligatorio ausente` |
+| Tipo incompatible (texto por número, booleano, lista…) | **422** | `latitude: tipo incompatible: se esperaba numero (se recibio str)` |
+| `null` en una variable que no lo admite | **422** | `median_income: no admite null (solo total_bedrooms admite null)` |
+| Categoría que el modelo no conoce | **422** | `ocean_proximity: categoria desconocida 'NEAR_BAY'. Categorias validas: [...]` |
+| Cuerpo que no es JSON ni un objeto | **422** | `(cuerpo): el cuerpo no es un JSON valido` |
+| La versión configurada no existe o no se puede cargar | **503** | `La version 'v99' no esta disponible en ...` + `versiones_disponibles` + `como_seleccionar` |
 
-A diferencia de `predict.py` de la Fase 2, una **categoría no vista se rechaza** en vez de advertirse: en un servicio, devolver una predicción calculada sobre una fila de ceros sin que el cliente se entere es peor que un error explícito.
+### `POST /train`
 
-### Entrenar una versión nueva
+Entrena con `DATA_PATH`, `TARGET` y `SEED` (los de la Fase 2) y acepta un **cuerpo vacío**:
 
 ```powershell
-curl.exe -s -X POST http://localhost:8000/train -H "Content-Type: application/json" -d "{}"
+curl.exe -s -X POST http://localhost:8000/train
 ```
 
-El cuerpo es opcional y admite `version`, `seed` y `n_estimators`. Sin `version` se genera un identificador con fecha y hora (`v20261122-213000`). La respuesta (201) trae el identificador, la ruta donde quedó y las métricas de prueba del modelo y del modelo base. **La versión nueva no se usa para predecir hasta que se cambie `MODEL_VERSION` y se reinicie la API**; así lo informa el campo `nota` de la respuesta. Las versiones anteriores quedan intactas: repetir un identificador existente falla con 409.
+Cuerpo opcional: `{"version": "v3", "seed": 7, "n_estimators": 50}`. Si no se da `version`, genera un identificador disponible con fecha y hora (`v20261117-142453`). Responde **201** con la versión, su ruta, las métricas de prueba y la versión activa:
 
-## 6. Docker
+```json
+{"version": "v20261117-142453", "ruta": "models/v20261117-142453",
+ "metricas_prueba": {"modelo": {"MAE": ..., "RMSE": ..., "R2": ...}, "modelo_base": {...}},
+ "version_activa": "v1",
+ "nota": "La version nueva esta guardada pero /predict sigue usando la version activa. ..."}
+```
 
-La imagen se construye **desde la raíz del repositorio**, porque el contexto debe incluir `fase-2/src/` y `fase-2/train.py` además de `fase-3/`. Los datos y los modelos **no** van dentro de la imagen: se montan al ejecutar, igual que en la Fase 2, de modo que lo que entrene `POST /train` persiste en el equipo.
+- **No se sobrescribe nada**: una versión que ya existe responde **409**; un identificador inválido, 422; si falta el CSV, **503** (`datos_no_disponibles`).
+- **La versión nueva no se activa sola**: `/predict` sigue con `MODEL_VERSION` hasta que se cambie (sección 7).
+- El entrenamiento es síncrono y con el dataset completo tarda unos 30 segundos; un segundo `/train` simultáneo recibe 409.
+
+## 7. Seleccionar la versión
+
+`/predict` usa la versión de la variable `MODEL_VERSION` (por defecto `v1`). Para ver cuáles hay:
 
 ```powershell
-# Desde la raiz del repositorio
-docker build -f fase-3/Dockerfile -t api-vivienda:3.0 --build-arg GIT_COMMIT=$(git rev-parse HEAD) .
-
-docker run --rm -p 8000:8000 `
-  -v "${PWD}/fase-2/data:/app/data:ro" `
-  -v "${PWD}/fase-2/models:/app/models" `
-  -e MODEL_VERSION=v1 `
-  api-vivienda:3.0
+curl.exe -s http://localhost:8000/versiones
 ```
 
-```bash
-# Bash
-docker build -f fase-3/Dockerfile -t api-vivienda:3.0 --build-arg GIT_COMMIT=$(git rev-parse HEAD) .
-
-docker run --rm -p 8000:8000 \
-  -v "$PWD/fase-2/data:/app/data:ro" \
-  -v "$PWD/fase-2/models:/app/models" \
-  -e MODEL_VERSION=v1 \
-  api-vivienda:3.0
-```
-
-| Aspecto | Valor |
-|---|---|
-| Puerto | el contenedor escucha en `0.0.0.0:8000`; se publica con `-p 8000:8000` y se consulta en `http://localhost:8000` |
-| Acceso a los datos | `fase-2/data` montado en `/app/data` en solo lectura; `DATA_PATH=/app/data/housing.csv` |
-| Montaje de los modelos | `fase-2/models` montado en `/app/models` con escritura; `MODELS_DIR=/app/models`. Lo que guarde `POST /train` aparece en `fase-2/models/` del equipo |
-| Versión activa | `-e MODEL_VERSION=v1` (por defecto `v1`) |
-
-Las pruebas también corren dentro de la imagen: `docker run --rm api-vivienda:3.0 python -m pytest`.
-
-`fase-3/Dockerfile.dockerignore` excluye del contexto el historial de Git, los entornos virtuales, las cachés, los datos y los modelos. Es la convención de BuildKit para un `.dockerignore` propio de un Dockerfile con nombre explícito, necesaria aquí porque el contexto es la raíz del repositorio y el `.dockerignore` de la Fase 2 no aplica.
-
-> Si `docker build` falla al descargar `python:3.14-slim`, usar `python:3.12-slim` en la primera línea del Dockerfile. Las versiones de `requirements.txt` funcionan en ambas.
-
-## 7. Cliente de prueba
-
-`cliente_prueba.py` consulta `/health` y envía una predicción. Solo usa la librería estándar, así que corre sin instalar nada.
+Para usar otra, **reinicie la API** con la variable definida:
 
 ```powershell
-python cliente_prueba.py                                            # usa ejemplo_solicitud.json
-python cliente_prueba.py --csv ..\fase-2\data\ejemplo_prediccion.csv --fila 2
-python cliente_prueba.py --quitar median_income                     # prueba de validacion: 422
+# local
+$env:MODEL_VERSION = "v2"
+python -m uvicorn api:app --host 127.0.0.1 --port 8000
+
+# Docker: añadir  -e MODEL_VERSION=v2  al docker run
 ```
 
-Salida con la API en ejecución:
+Si la versión indicada no existe, `/predict` devuelve **503** con la lista de versiones disponibles y esta misma instrucción.
 
-```
-GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
-POST /predict  solicitud: {"longitude": -122.23, "latitude": 37.88, ...}
-POST /predict  -> 200 {"prediccion": 431942.36, "version": "v1"}
-```
+## 8. Cliente de prueba
 
-Devuelve código de salida 0 si la predicción fue 200 y 1 en cualquier otro caso, de modo que sirve en un script.
-
-## 8. Pruebas (pytest)
+`cliente_prueba.py` usa solo la biblioteca estándar. Consulta `/health` y envía una predicción con el registro de `ejemplo_solicitud.json`:
 
 ```powershell
+python cliente_prueba.py
+python cliente_prueba.py --csv ..\fase-2\data\ejemplo_prediccion.csv --fila 3     # otra fila del CSV de la Fase 2
+python cliente_prueba.py --quitar median_income                                    # entrada inválida: debe dar 422
+```
+
+Termina con código 0 si `/predict` responde 200 y con 1 en caso contrario.
+
+## 9. Pruebas
+
+```powershell
+# desde fase-3/, con el entorno virtual activo
 python -m pytest
 ```
 
-16 pruebas, sin red y sin el dataset completo: entrenan un modelo pequeño sobre datos sintéticos con el mismo esquema, en un directorio temporal, y apuntan la API a él con variables de entorno. Resultado: `16 passed`, registrado en [`evidencia/pytest.txt`](evidencia/pytest.txt), cuyo encabezado deja constancia del entorno (Windows, Python 3.13.7, pytest 9.1.1).
+Resultado: **16 passed** (Windows con Python 3.13.7 y 3.14.5, y dentro de la imagen Docker). Salida completa en `evidencia/pytest.txt`.
 
-Los **tres casos que exige la especificación** son estos:
-
-| Caso exigido | Prueba |
-|---|---|
-| `/health` responde 200 | `test_health_responde_siempre_aunque_no_haya_modelo` |
-| Una entrada válida devuelve predicción y versión | `test_predict_devuelve_un_valor_numerico` |
-| Falta un campo obligatorio y se rechaza | `test_predict_sin_un_campo_obligatorio_responde_422_y_lo_nombra` |
-
-Las trece restantes:
+Entrenan un modelo **pequeño** (5 árboles) sobre datos sintéticos en una carpeta temporal (no tocan `fase-2/models` ni necesitan `housing.csv`). Las tres exigidas:
 
 | Prueba | Qué comprueba |
 |---|---|
-| `test_health_reporta_el_modelo_cuando_ya_existe` | `/health` distingue entre «en ejecución» y «con modelo disponible». |
-| `test_versiones_lista_lo_guardado` | `/versiones` lista lo que hay en disco y señala la activa. |
-| `test_predict_admite_null_solo_en_total_bedrooms` | `null` en `total_bedrooms` se imputa y predice; en otra variable es 422. Además, enviar `null` y **omitir** el campo no son lo mismo: lo primero es un dato ausente conocido y lo segundo una solicitud incompleta, que se rechaza. |
-| `test_predict_ignora_campos_de_mas` | Un campo extra (incluida la variable objetivo) no altera la predicción. |
-| `test_predict_con_tipo_incompatible_responde_422` | Un texto donde se espera un número se rechaza nombrando el campo. |
-| `test_predict_rechaza_cualquier_valor_que_no_sea_un_numero_finito` | Seis formas de valor inválido en un campo numérico (`"abc"`, `true`, `NaN`, `Infinity`, una lista y `null`) dan 422 y nombran el campo. Cubre `strict=True` y `allow_inf_nan=False`: sin ellos, `true` se convertiría en `1.0` y un `NaN` llegaría al modelo, y la API respondería 200 con un número sin sentido. |
-| `test_predict_con_categoria_desconocida_responde_422_y_lista_las_validas` | Una categoría no vista se rechaza y el mensaje lista las válidas. |
-| `test_predict_sin_modelo_responde_503_y_explica_como_resolverlo` | Sin la versión configurada: 503 con las versiones disponibles y cómo seleccionarla. |
-| `test_train_crea_una_version_nueva_con_sus_artefactos` | `/train` responde 201 y deja `modelo.joblib`, `metrics.json` y `metadata.json`. |
-| `test_train_no_sobrescribe_una_version_existente` | Repetir un identificador falla sin tocar los archivos de la versión anterior. |
-| `test_train_sin_datos_responde_503` | Sin el CSV de entrenamiento: 503 con un mensaje que lo explica. |
-| `test_train_y_predict_usan_el_mismo_esquema` | Una versión recién entrenada sirve para predecir: `/train` y `/predict` coinciden. |
-| `test_el_ejemplo_de_solicitud_es_valido` | `ejemplo_solicitud.json` es aceptado por la API, de modo que el ejemplo del README no se desactualiza. |
+| `test_health_responde_siempre_aunque_no_haya_modelo` | `/health` responde 200 y `status` es `ok`. |
+| `test_predict_devuelve_un_valor_numerico` | Un registro válido devuelve 200 con `prediccion` numérica y `version`. |
+| `test_predict_sin_un_campo_obligatorio_responde_422_y_lo_nombra` | Sin `median_income` responde 422 y el mensaje nombra la variable. |
 
-## 9. Evidencia de ejecución
+Las otras trece comprueban: `/health` cuando el modelo existe; `/versiones`; que `null` solo se admite en `total_bedrooms` y que **omitir** ese campo da 422 (antes daba 200 con una predicción inventada); que los campos de más se ignoran; los tipos incompatibles; que en `longitude` se rechaza cualquier valor que no sea un número finito (texto, booleano, `NaN`, `Infinity`, lista, `null`); la categoría desconocida con la lista de válidas; el 503 sin modelo; que `/train` guarda modelo, métricas y metadatos, no sobrescribe (409) y responde 503 sin datos; que una versión entrenada por `/train` se usa en `/predict`; y que `ejemplo_solicitud.json` funciona tal cual.
+
+Para comprobar que las pruebas detectan fallos reales se modificó `api.py` a propósito (quitar los tipos estrictos, no nombrar el campo en el error, dar valor por defecto a `total_bedrooms`): en cada caso falló al menos una prueba, y los cambios se revirtieron.
+
+En Docker: `docker run --rm api-vivienda:3.0 python -m pytest`.
+
+## 10. Comprobación desde una copia nueva del repositorio
+
+| Paso | Qué hacer | Qué debe verse |
+|---|---|---|
+| 01 | Construir la imagen y arrancar el contenedor (sección 5, Docker). | La API escucha en `http://localhost:8000`. |
+| 02 | `curl.exe -s http://localhost:8000/health` y luego `python cliente_prueba.py` (desde `fase-3/`). | `/health` 200; `/predict` devuelve `{"prediccion": 431942.36, "version": "v1"}`. |
+| 03 | `curl.exe -s -X POST http://localhost:8000/train`; después `Get-ChildItem fase-2\models -Name`; y `python -m pytest` (desde `fase-3/`). | Aparece una carpeta `v2026…` nueva junto a `v1` y `v2`; pasan las pruebas. |
+
+## 11. Decisiones y limitaciones
+
+- **Solo `total_bedrooms` admite `null`**, porque es la única variable con valores faltantes en los datos de entrenamiento. Para las demás, imputar la mediana de una coordenada o de un ingreso produciría una predicción sin sentido, así que se rechaza con 422.
+- **Una categoría desconocida se rechaza** (la Fase 2 la aceptaba con una advertencia): en una API un error de escritura (`NEAR_BAY`) devolvería en silencio una predicción equivocada.
+- Los tipos son estrictos: `"24.5"` (texto) no se acepta como número.
+- `/train` es síncrono, no tiene autenticación y entrena con los datos que haya en `DATA_PATH`: es adecuado para una demostración local, no para exponerlo en Internet.
+- El modelo conserva las limitaciones de la Fase 2 (ver `fase-2/README.md`, sección 9): estimaciones para **zonas ya representadas en los datos**, datos de 1990 y valores truncados en 500.001 USD.
+- Los modelos se entrenaron con scikit-learn 1.9.1; cargarlos con otra versión puede dar resultados distintos, por eso `requirements.txt` fija las versiones.
+
+## 12. Evidencia de ejecución
+
+Salidas reales de terminal, guardadas en `evidencia/`:
 
 | Archivo | Contenido |
 |---|---|
-| [`evidencia/pytest.txt`](evidencia/pytest.txt) | `python -m pytest` en el entorno local |
-| `evidencia/generar_docker.ps1` | el script que genera la evidencia de Docker: ejecuta la secuencia completa desde la raíz del repositorio (build, arranque del contenedor, `/health`, `/versiones`, el cliente de prueba, una entrada inválida, `POST /train`, el listado de `fase-2/models/` mostrando que la versión entrenada persiste, y las pruebas dentro de la imagen) y deja la salida en `evidencia/docker.txt` |
-| `evidencia/docker.txt` | **pendiente.** Lo aporta el integrante que tiene Docker instalado, ejecutando el script anterior |
+| [`evidencia/pytest.txt`](evidencia/pytest.txt) | `python -m pytest` desde `fase-3/` |
+| [`evidencia/docker.txt`](evidencia/docker.txt) | Registro de GitHub Actions: `docker build`, pytest dentro de la imagen, arranque del contenedor, `/health`, el cliente (dos predicciones y una entrada inválida), `/train` y el listado de `fase-2/models` |
 
-La versión que crea `POST /train` durante esa comprobación queda en `fase-2/models/` con un identificador de fecha y hora (`v20261122-...`) y **no se versiona** en Git: es evidencia de ejecución, no una entrega.
-
-## 10. Estructura
+Extracto de la salida del cliente contra el contenedor:
 
 ```
-fase-3/
-├── api.py                     # la API: /health, /versiones, /predict, /train
-├── cliente_prueba.py          # cliente sencillo (solo libreria estandar)
-├── ejemplo_solicitud.json     # registro de ejemplo, tomado del CSV del proyecto
-├── requirements.txt           # dependencias con versiones fijas
-├── Dockerfile                 # se construye desde la raiz del repositorio
-├── Dockerfile.dockerignore    # contexto de construccion (convencion de BuildKit)
-├── pytest.ini
-├── tests/                     # conftest.py y test_api.py (16 pruebas)
-├── evidencia/                 # salidas reales de terminal
-└── README.md                  # este archivo
+GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
+POST /predict  -> 200 {"prediccion": 431942.36, "version": "v1"}
+POST /predict  (fila 2 de ejemplo_prediccion.csv) -> 200 {"prediccion": 388912.02, "version": "v1"}
+POST /predict  (sin median_income) -> 422 {"error": "entrada_invalida", "mensaje": "La entrada no es valida. median_income: campo obligatorio ausente", ...}
 ```
 
-## 11. Fuentes consultadas y código externo adaptado
+En esa ejecución `housing.csv` no está disponible (no se versiona en GitHub), así que `POST /train` responde **503 `datos_no_disponibles`**, que es el comportamiento esperado y no crea ninguna versión. El entrenamiento por `/train` se comprueba en las pruebas automáticas con datos sintéticos (sección 9) y se repite a mano con el `housing.csv` real en `fase-2/data` (paso 03 de la sección 10).
 
-- Documentación de FastAPI (routing, modelos de pydantic, manejadores de excepciones) y de Starlette (`TestClient`).
-- Documentación de pytest (fixtures, `monkeypatch`, `tmp_path`).
-- El pipeline, el esquema de entrada y la función de entrenamiento se reutilizan de la Fase 2 de este mismo repositorio; no se reescribieron.
-- **Asistencia de IA generativa.** La estructura inicial de `api.py`, del `Dockerfile`, de las pruebas y de este README se elaboró con asistencia de Claude (Anthropic). El equipo revisó el código, lo ejecutó en sus propios entornos y lo comprende; las cifras y las salidas de este README provienen de ejecuciones propias registradas en `evidencia/`.
+## 13. Fuentes y asistencia de IA
+
+- Documentación de FastAPI, Pydantic, scikit-learn, Docker y GitHub Actions.
+- Código reutilizado: `fase-2/train.py` (`run_training`), `fase-2/src/` y los artefactos de `fase-2/models/`.
+- **Asistencia de IA generativa.** La estructura inicial de `api.py`, las pruebas, el cliente, el `Dockerfile` y el flujo de GitHub Actions se elaboró con asistencia de Claude (Anthropic). El equipo revisó el código, lo ejecutó en sus propios entornos, amplió las pruebas y lo comprende; las cifras y salidas de este README provienen de ejecuciones propias registradas en `evidencia/`.
