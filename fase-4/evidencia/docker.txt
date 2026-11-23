@@ -1,0 +1,481 @@
+2026-11-23T04:22:22.8979598Z Current runner version: '2.338.2'
+2026-11-23T04:22:22.9000777Z ##[group]Runner Image Provisioner
+2026-11-23T04:22:22.9001553Z Hosted Compute Agent
+2026-11-23T04:22:22.9002206Z Version: 20261111.635
+2026-11-23T04:22:22.9002777Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+2026-11-23T04:22:22.9003477Z Build Date: 2026-11-11T01:49:01Z
+2026-11-23T04:22:22.9004624Z Worker ID: {a74afc5d-4754-42b2-a2a4-b649c0dd6ae3}
+2026-11-23T04:22:22.9005264Z Region: westus3
+2026-11-23T04:22:22.9005800Z Cloud: Azure
+2026-11-23T04:22:22.9006295Z ##[endgroup]
+2026-11-23T04:22:22.9007607Z ##[group]Operating System
+2026-11-23T04:22:22.9008218Z Ubuntu
+2026-11-23T04:22:22.9008704Z 26.04.1
+2026-11-23T04:22:22.9009234Z LTS
+2026-11-23T04:22:22.9009714Z ##[endgroup]
+2026-11-23T04:22:22.9010216Z ##[group]Runner Image
+2026-11-23T04:22:22.9010806Z Image: ubuntu-26.04
+2026-11-23T04:22:22.9011322Z Version: 20261116.202.1
+2026-11-23T04:22:22.9012475Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261116.202/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-23T04:22:22.9014344Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261116.202
+2026-11-23T04:22:22.9015280Z ##[endgroup]
+2026-11-23T04:22:22.9016392Z ##[group]GITHUB_TOKEN Permissions
+2026-11-23T04:22:22.9018326Z Contents: read
+2026-11-23T04:22:22.9018847Z Metadata: read
+2026-11-23T04:22:22.9019412Z Packages: read
+2026-11-23T04:22:22.9019915Z ##[endgroup]
+2026-11-23T04:22:22.9021739Z Secret source: Actions
+2026-11-23T04:22:22.9022633Z Cache mode: write
+2026-11-23T04:22:22.9023254Z Prepare workflow directory
+2026-11-23T04:22:22.9316880Z Prepare all required actions
+2026-11-23T04:22:22.9362263Z Getting action download info
+2026-11-23T04:22:23.2354982Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-23T04:22:23.4111953Z Complete job name: fase-4
+2026-11-23T04:22:23.4901996Z ##[group]Run actions/checkout@v4
+2026-11-23T04:22:23.4902824Z with:
+2026-11-23T04:22:23.4903365Z   repository: juanj-rgb/Proyecto-Modelos-1
+2026-11-23T04:22:23.4907710Z   token: ***
+2026-11-23T04:22:23.4908283Z   ssh-strict: true
+2026-11-23T04:22:23.4909193Z   ssh-user: git
+2026-11-23T04:22:23.4909737Z   persist-credentials: true
+2026-11-23T04:22:23.4910293Z   clean: true
+2026-11-23T04:22:23.4910851Z   sparse-checkout-cone-mode: true
+2026-11-23T04:22:23.4911474Z   fetch-depth: 1
+2026-11-23T04:22:23.4911990Z   fetch-tags: false
+2026-11-23T04:22:23.4912557Z   show-progress: true
+2026-11-23T04:22:23.4913062Z   lfs: false
+2026-11-23T04:22:23.4913833Z   submodules: false
+2026-11-23T04:22:23.4914380Z   set-safe-directory: true
+2026-11-23T04:22:23.4914979Z   allow-unsafe-pr-checkout: false
+2026-11-23T04:22:23.4915855Z ##[endgroup]
+2026-11-23T04:22:23.7460450Z Syncing repository: juanj-rgb/Proyecto-Modelos-1
+2026-11-23T04:22:23.7462883Z ##[group]Getting Git version info
+2026-11-23T04:22:23.7464096Z Working directory is '/home/runner/work/Proyecto-Modelos-1/Proyecto-Modelos-1'
+2026-11-23T04:22:23.7465417Z [command]/usr/bin/git version
+2026-11-23T04:22:23.7466052Z git version 2.56.1
+2026-11-23T04:22:23.7483024Z ##[endgroup]
+2026-11-23T04:22:23.7497674Z Temporarily overriding HOME='/home/runner/work/_temp/7beda385-2ac0-41d7-86b7-0a85fd6c22fd' before making global git config changes
+2026-11-23T04:22:23.7499749Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-23T04:22:23.7502949Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Proyecto-Modelos-1/Proyecto-Modelos-1
+2026-11-23T04:22:23.7562144Z Deleting the contents of '/home/runner/work/Proyecto-Modelos-1/Proyecto-Modelos-1'
+2026-11-23T04:22:23.7566091Z ##[group]Initializing the repository
+2026-11-23T04:22:23.7571418Z [command]/usr/bin/git init /home/runner/work/Proyecto-Modelos-1/Proyecto-Modelos-1
+2026-11-23T04:22:23.7667004Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-23T04:22:23.7668261Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-23T04:22:23.7670220Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-23T04:22:23.7671226Z hint: call:
+2026-11-23T04:22:23.7671729Z hint:
+2026-11-23T04:22:23.7672374Z hint: 	git config --global init.defaultBranch <name>
+2026-11-23T04:22:23.7672999Z hint:
+2026-11-23T04:22:23.7673982Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-23T04:22:23.7674947Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-23T04:22:23.7675723Z hint:
+2026-11-23T04:22:23.7676275Z hint: 	git branch -m <name>
+2026-11-23T04:22:23.7676858Z hint:
+2026-11-23T04:22:23.7677511Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-23T04:22:23.7691044Z Initialized empty Git repository in /home/runner/work/Proyecto-Modelos-1/Proyecto-Modelos-1/.git/
+2026-11-23T04:22:23.7701933Z [command]/usr/bin/git remote add origin https://github.com/juanj-rgb/Proyecto-Modelos-1
+2026-11-23T04:22:23.7749070Z ##[endgroup]
+2026-11-23T04:22:23.7749990Z ##[group]Disabling automatic garbage collection
+2026-11-23T04:22:23.7753021Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-23T04:22:23.7782351Z ##[endgroup]
+2026-11-23T04:22:23.7783169Z ##[group]Setting up auth
+2026-11-23T04:22:23.7790226Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-23T04:22:23.7822047Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-23T04:22:23.8193804Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-23T04:22:23.8224544Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-23T04:22:23.8460523Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-23T04:22:23.8489134Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-23T04:22:23.8703058Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-23T04:22:23.8737970Z ##[endgroup]
+2026-11-23T04:22:23.8739772Z ##[group]Fetching the repository
+2026-11-23T04:22:23.8747867Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d1152a94a2cebd9a4d512873a0f3b86d25c45ce9:refs/remotes/pull/25/merge
+2026-11-23T04:22:28.4396508Z From https://github.com/juanj-rgb/Proyecto-Modelos-1
+2026-11-23T04:22:28.4398478Z  * [new ref]         d1152a94a2cebd9a4d512873a0f3b86d25c45ce9 -> pull/25/merge
+2026-11-23T04:22:28.4402107Z ##[endgroup]
+2026-11-23T04:22:28.4406894Z ##[group]Determining the checkout info
+2026-11-23T04:22:28.4408527Z ##[endgroup]
+2026-11-23T04:22:28.4425768Z [command]/usr/bin/git sparse-checkout disable
+2026-11-23T04:22:28.4471399Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-23T04:22:28.4500698Z ##[group]Checking out the ref
+2026-11-23T04:22:28.4503467Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/25/merge
+2026-11-23T04:22:28.9074912Z Note: switching to 'refs/remotes/pull/25/merge'.
+2026-11-23T04:22:28.9075642Z 
+2026-11-23T04:22:28.9076199Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-23T04:22:28.9077461Z changes and commit them, and you can discard any commits you make in this
+2026-11-23T04:22:28.9078294Z state without impacting any branches by switching back to a branch.
+2026-11-23T04:22:28.9080562Z 
+2026-11-23T04:22:28.9081025Z If you want to create a new branch to retain commits you create, you may
+2026-11-23T04:22:28.9082064Z do so (now or later) by using -c with the switch command. Example:
+2026-11-23T04:22:28.9082589Z 
+2026-11-23T04:22:28.9082883Z   git switch -c <new-branch-name>
+2026-11-23T04:22:28.9083973Z 
+2026-11-23T04:22:28.9084221Z Or undo this operation with:
+2026-11-23T04:22:28.9084529Z 
+2026-11-23T04:22:28.9084761Z   git switch -
+2026-11-23T04:22:28.9084991Z 
+2026-11-23T04:22:28.9085373Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-23T04:22:28.9085844Z 
+2026-11-23T04:22:28.9086327Z HEAD is now at d1152a9 Merge c08c09e208b15218389568829d7136d9a7a2bd0e into 6a45363667b359dc7e74ee04476b9b40a2099318
+2026-11-23T04:22:28.9088353Z ##[endgroup]
+2026-11-23T04:22:28.9136127Z [command]/usr/bin/git log -1 --format=%H
+2026-11-23T04:22:28.9160265Z d1152a94a2cebd9a4d512873a0f3b86d25c45ce9
+2026-11-23T04:22:28.9397697Z ##[group]Run docker build -f fase-4/Dockerfile -t api-vivienda:4.0 --build-arg GIT_COMMIT=d1152a94a2cebd9a4d512873a0f3b86d25c45ce9 .
+2026-11-23T04:22:28.9398763Z [36;1mdocker build -f fase-4/Dockerfile -t api-vivienda:4.0 --build-arg GIT_COMMIT=d1152a94a2cebd9a4d512873a0f3b86d25c45ce9 .[0m
+2026-11-23T04:22:28.9424852Z shell: /usr/bin/bash -e {0}
+2026-11-23T04:22:28.9425462Z ##[endgroup]
+2026-11-23T04:22:29.5062184Z #0 building with "default" instance using docker driver
+2026-11-23T04:22:29.5062703Z 
+2026-11-23T04:22:29.5063086Z #1 [internal] load build definition from Dockerfile
+2026-11-23T04:22:29.5064142Z #1 transferring dockerfile: 2.33kB done
+2026-11-23T04:22:29.5064685Z #1 DONE 0.0s
+2026-11-23T04:22:29.5064947Z 
+2026-11-23T04:22:29.5065235Z #2 [internal] load metadata for docker.io/library/python:3.14-slim
+2026-11-23T04:22:29.7155583Z #2 ...
+2026-11-23T04:22:29.7156506Z 
+2026-11-23T04:22:29.7156782Z #3 [auth] library/python:pull token for registry-1.docker.io
+2026-11-23T04:22:29.7157512Z #3 DONE 0.0s
+2026-11-23T04:22:29.8648707Z 
+2026-11-23T04:22:29.8649619Z #2 [internal] load metadata for docker.io/library/python:3.14-slim
+2026-11-23T04:22:30.2038519Z #2 DONE 0.8s
+2026-11-23T04:22:30.3374287Z 
+2026-11-23T04:22:30.3405389Z #4 [internal] load build context
+2026-11-23T04:22:30.3407506Z #4 transferring context: 62.55kB done
+2026-11-23T04:22:30.3409611Z #4 DONE 0.0s
+2026-11-23T04:22:30.3409854Z 
+2026-11-23T04:22:30.3410618Z #5 [1/8] FROM docker.io/library/python:3.14-slim@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f
+2026-11-23T04:22:30.3412257Z #5 resolve docker.io/library/python:3.14-slim@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f 0.0s done
+2026-11-23T04:22:30.3414018Z #5 sha256:ce3c2a9291f81f0f8349de8621c9878a424552bfc64d0e4f20a4ac6006489fe1 249B / 249B 0.1s done
+2026-11-23T04:22:30.5430050Z #5 sha256:0e665593ff40197b851364fab0389fc6f5fa35bc74814ddfad07f96f417fc574 1.05MB / 12.41MB 0.2s
+2026-11-23T04:22:30.5431257Z #5 sha256:d6d089a6c0a2543e3dd748a4ffcbfe409ab93f2049d42640588be3a3f67acffe 1.29MB / 1.29MB 0.3s done
+2026-11-23T04:22:30.5432068Z #5 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 0B / 29.86MB 0.2s
+2026-11-23T04:22:30.7127084Z #5 sha256:0e665593ff40197b851364fab0389fc6f5fa35bc74814ddfad07f96f417fc574 12.41MB / 12.41MB 0.3s done
+2026-11-23T04:22:30.7129361Z #5 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 29.86MB / 29.86MB 0.4s done
+2026-11-23T04:22:30.8667068Z #5 extracting sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41
+2026-11-23T04:22:31.2670904Z #5 extracting sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 0.6s done
+2026-11-23T04:22:31.2671739Z #5 DONE 1.0s
+2026-11-23T04:22:31.4655311Z 
+2026-11-23T04:22:31.4656487Z #5 [1/8] FROM docker.io/library/python:3.14-slim@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f
+2026-11-23T04:22:31.4658029Z #5 extracting sha256:d6d089a6c0a2543e3dd748a4ffcbfe409ab93f2049d42640588be3a3f67acffe 0.0s done
+2026-11-23T04:22:31.4658798Z #5 extracting sha256:0e665593ff40197b851364fab0389fc6f5fa35bc74814ddfad07f96f417fc574
+2026-11-23T04:22:31.5586897Z #5 extracting sha256:0e665593ff40197b851364fab0389fc6f5fa35bc74814ddfad07f96f417fc574 0.2s done
+2026-11-23T04:22:31.5587911Z #5 DONE 1.3s
+2026-11-23T04:22:31.7192256Z 
+2026-11-23T04:22:31.7193768Z #5 [1/8] FROM docker.io/library/python:3.14-slim@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f
+2026-11-23T04:22:31.7194818Z #5 extracting sha256:ce3c2a9291f81f0f8349de8621c9878a424552bfc64d0e4f20a4ac6006489fe1 done
+2026-11-23T04:22:31.7195342Z #5 DONE 1.3s
+2026-11-23T04:22:31.7195514Z 
+2026-11-23T04:22:31.7195671Z #6 [2/8] WORKDIR /app
+2026-11-23T04:22:33.1784272Z #6 DONE 1.6s
+2026-11-23T04:22:33.3467596Z 
+2026-11-23T04:22:33.3468414Z #7 [3/8] COPY fase-4/requirements.txt .
+2026-11-23T04:22:33.3469829Z #7 DONE 0.0s
+2026-11-23T04:22:33.3470162Z 
+2026-11-23T04:22:33.3470693Z #8 [4/8] RUN pip install --no-cache-dir -r requirements.txt
+2026-11-23T04:22:34.8873236Z #8 1.691 Collecting numpy==2.4.6 (from -r requirements.txt (line 1))
+2026-11-23T04:22:35.0069900Z #8 1.718   Downloading numpy-2.4.6-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-11-23T04:22:35.0070738Z #8 1.811 Collecting pandas==3.0.6 (from -r requirements.txt (line 2))
+2026-11-23T04:22:35.1190977Z #8 1.817   Downloading pandas-3.0.6-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (79 kB)
+2026-11-23T04:22:35.1194633Z #8 1.898 Collecting scikit-learn==1.9.1 (from -r requirements.txt (line 3))
+2026-11-23T04:22:35.1204936Z #8 1.903   Downloading scikit_learn-1.9.1-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.3 kB)
+2026-11-23T04:22:35.1205772Z #8 1.923 Collecting joblib==1.6.0 (from -r requirements.txt (line 4))
+2026-11-23T04:22:35.2210324Z #8 1.926   Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+2026-11-23T04:22:35.2211006Z #8 2.019 Collecting scipy==1.18.1 (from -r requirements.txt (line 5))
+2026-11-23T04:22:35.2211654Z #8 2.025   Downloading scipy-1.18.1-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+2026-11-23T04:22:35.3406417Z #8 2.045 Collecting threadpoolctl==3.7.0 (from -r requirements.txt (line 6))
+2026-11-23T04:22:35.3407304Z #8 2.050   Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+2026-11-23T04:22:35.3408242Z #8 2.074 Collecting pytest==9.1.1 (from -r requirements.txt (line 7))
+2026-11-23T04:22:35.3409728Z #8 2.077   Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+2026-11-23T04:22:35.3410738Z #8 2.115 Collecting fastapi==0.163.2 (from -r requirements.txt (line 8))
+2026-11-23T04:22:35.3411496Z #8 2.118   Downloading fastapi-0.163.2-py3-none-any.whl.metadata (27 kB)
+2026-11-23T04:22:35.3412113Z #8 2.144 Collecting starlette==1.10.0 (from -r requirements.txt (line 9))
+2026-11-23T04:22:35.4527822Z #8 2.148   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+2026-11-23T04:22:35.4530675Z #8 2.227 Collecting pydantic==2.14.3 (from -r requirements.txt (line 10))
+2026-11-23T04:22:35.4531695Z #8 2.230   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+2026-11-23T04:22:35.4532404Z #8 2.256 Collecting uvicorn==0.54.0 (from -r requirements.txt (line 11))
+2026-11-23T04:22:35.5735314Z #8 2.260   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+2026-11-23T04:22:35.5736268Z #8 2.274 Collecting httpx2==2.16.2 (from -r requirements.txt (line 12))
+2026-11-23T04:22:35.5737301Z #8 2.277   Downloading httpx2-2.16.2-py3-none-any.whl.metadata (10.0 kB)
+2026-11-23T04:22:35.5738297Z #8 2.296 Collecting python-dateutil>=2.8.2 (from pandas==3.0.6->-r requirements.txt (line 2))
+2026-11-23T04:22:35.5739231Z #8 2.299   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+2026-11-23T04:22:35.5740111Z #8 2.331 Collecting narwhals>=2.0.1 (from scikit-learn==1.9.1->-r requirements.txt (line 3))
+2026-11-23T04:22:35.5740718Z #8 2.335   Downloading narwhals-2.29.0-py3-none-any.whl.metadata (15 kB)
+2026-11-23T04:22:35.5741274Z #8 2.353 Collecting cloudpickle>=3.0 (from joblib==1.6.0->-r requirements.txt (line 4))
+2026-11-23T04:22:35.5741839Z #8 2.356   Downloading cloudpickle-3.1.3-py3-none-any.whl.metadata (7.1 kB)
+2026-11-23T04:22:35.5742430Z #8 2.377 Collecting iniconfig>=1.0.1 (from pytest==9.1.1->-r requirements.txt (line 7))
+2026-11-23T04:22:35.6933545Z #8 2.381   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-11-23T04:22:35.6934773Z #8 2.399 Collecting packaging>=22 (from pytest==9.1.1->-r requirements.txt (line 7))
+2026-11-23T04:22:35.6935868Z #8 2.402   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-11-23T04:22:35.6936846Z #8 2.416 Collecting pluggy<2,>=1.5 (from pytest==9.1.1->-r requirements.txt (line 7))
+2026-11-23T04:22:35.6937646Z #8 2.420   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+2026-11-23T04:22:35.6938289Z #8 2.439 Collecting pygments>=2.7.2 (from pytest==9.1.1->-r requirements.txt (line 7))
+2026-11-23T04:22:35.6939278Z #8 2.442   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-23T04:22:35.6939854Z #8 2.463 Collecting anyio>=4.1.0 (from fastapi==0.163.2->-r requirements.txt (line 8))
+2026-11-23T04:22:35.6940455Z #8 2.467   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+2026-11-23T04:22:35.6941047Z #8 2.497 Collecting typing-extensions>=4.8.0 (from fastapi==0.163.2->-r requirements.txt (line 8))
+2026-11-23T04:22:35.7993361Z #8 2.501   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-23T04:22:35.7994866Z #8 2.523 Collecting typing-inspection>=0.4.2 (from fastapi==0.163.2->-r requirements.txt (line 8))
+2026-11-23T04:22:35.7995885Z #8 2.526   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+2026-11-23T04:22:35.7996844Z #8 2.551 Collecting annotated-doc>=0.0.2 (from fastapi==0.163.2->-r requirements.txt (line 8))
+2026-11-23T04:22:35.7997851Z #8 2.554   Downloading annotated_doc-0.0.7-py3-none-any.whl.metadata (6.4 kB)
+2026-11-23T04:22:35.7998802Z #8 2.582 Collecting opentelemetry-api>=1.44.0 (from fastapi==0.163.2->-r requirements.txt (line 8))
+2026-11-23T04:22:35.7999513Z #8 2.585   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+2026-11-23T04:22:35.8000134Z #8 2.603 Collecting annotated-types>=0.6.0 (from pydantic==2.14.3->-r requirements.txt (line 10))
+2026-11-23T04:22:35.9534762Z #8 2.607   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+2026-11-23T04:22:36.3613444Z #8 3.165 Collecting pydantic-core==2.50.4 (from pydantic==2.14.3->-r requirements.txt (line 10))
+2026-11-23T04:22:36.4652505Z #8 3.170   Downloading pydantic_core-2.50.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+2026-11-23T04:22:36.4653234Z #8 3.189 Collecting click>=7.0 (from uvicorn==0.54.0->-r requirements.txt (line 11))
+2026-11-23T04:22:36.4654072Z #8 3.192   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+2026-11-23T04:22:36.4654679Z #8 3.206 Collecting h11>=0.8 (from uvicorn==0.54.0->-r requirements.txt (line 11))
+2026-11-23T04:22:36.4655214Z #8 3.210   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-11-23T04:22:36.4655746Z #8 3.231 Collecting httpcore2==2.16.2 (from httpx2==2.16.2->-r requirements.txt (line 12))
+2026-11-23T04:22:36.4656476Z #8 3.234   Downloading httpcore2-2.16.2-py3-none-any.whl.metadata (28 kB)
+2026-11-23T04:22:36.4657007Z #8 3.251 Collecting idna>=3.18 (from httpx2==2.16.2->-r requirements.txt (line 12))
+2026-11-23T04:22:36.4657523Z #8 3.254   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-11-23T04:22:36.4658023Z #8 3.269 Collecting truststore>=0.10 (from httpx2==2.16.2->-r requirements.txt (line 12))
+2026-11-23T04:22:36.5785489Z #8 3.272   Downloading truststore-0.10.5-py3-none-any.whl.metadata (4.5 kB)
+2026-11-23T04:22:36.5786672Z #8 3.295 Collecting tzdata (from python-dateutil>=2.8.2->pandas==3.0.6->-r requirements.txt (line 2))
+2026-11-23T04:22:36.5788327Z #8 3.299   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-11-23T04:22:36.5789576Z #8 3.309 Downloading numpy-2.4.6-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB)
+2026-11-23T04:22:36.6810975Z #8 3.382    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.6/16.6 MB 232.5 MB/s  0:00:00
+2026-11-23T04:22:36.6812350Z #8 3.386 Downloading pandas-3.0.6-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (10.8 MB)
+2026-11-23T04:22:36.6814070Z #8 3.437    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.8/10.8 MB 222.7 MB/s  0:00:00
+2026-11-23T04:22:36.6815226Z #8 3.443 Downloading scikit_learn-1.9.1-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.2 MB)
+2026-11-23T04:22:36.8391641Z #8 3.485    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.2/9.2 MB 223.8 MB/s  0:00:00
+2026-11-23T04:22:36.8392434Z #8 3.488 Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+2026-11-23T04:22:36.8393288Z #8 3.492 Downloading scipy-1.18.1-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+2026-11-23T04:22:36.9851564Z #8 3.688    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 182.9 MB/s  0:00:00
+2026-11-23T04:22:36.9852617Z #8 3.692 Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+2026-11-23T04:22:36.9853109Z #8 3.697 Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+2026-11-23T04:22:36.9853910Z #8 3.703 Downloading fastapi-0.163.2-py3-none-any.whl (154 kB)
+2026-11-23T04:22:36.9854644Z #8 3.706 Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+2026-11-23T04:22:36.9855123Z #8 3.711 Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+2026-11-23T04:22:36.9855634Z #8 3.715 Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+2026-11-23T04:22:36.9856074Z #8 3.719 Downloading httpx2-2.16.2-py3-none-any.whl (97 kB)
+2026-11-23T04:22:36.9856617Z #8 3.722 Downloading httpcore2-2.16.2-py3-none-any.whl (85 kB)
+2026-11-23T04:22:36.9857244Z #8 3.728 Downloading pydantic_core-2.50.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+2026-11-23T04:22:36.9858025Z #8 3.733    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 596.0 MB/s  0:00:00
+2026-11-23T04:22:36.9858510Z #8 3.737 Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+2026-11-23T04:22:36.9858955Z #8 3.741 Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-11-23T04:22:36.9859435Z #8 3.744 Downloading annotated_doc-0.0.7-py3-none-any.whl (5.3 kB)
+2026-11-23T04:22:36.9859991Z #8 3.748 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-11-23T04:22:36.9860541Z #8 3.751 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+2026-11-23T04:22:36.9861335Z #8 3.755 Downloading cloudpickle-3.1.3-py3-none-any.whl (22 kB)
+2026-11-23T04:22:36.9862179Z #8 3.758 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-11-23T04:22:36.9862997Z #8 3.763 Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-11-23T04:22:36.9863796Z #8 3.767 Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-11-23T04:22:36.9864250Z #8 3.772 Downloading narwhals-2.29.0-py3-none-any.whl (501 kB)
+2026-11-23T04:22:36.9865022Z #8 3.776 Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+2026-11-23T04:22:36.9866000Z #8 3.781 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-11-23T04:22:36.9866840Z #8 3.785 Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-23T04:22:37.1538913Z #8 3.789    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 733.0 MB/s  0:00:00
+2026-11-23T04:22:37.1539663Z #8 3.792 Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+2026-11-23T04:22:37.1540223Z #8 3.796 Downloading truststore-0.10.5-py3-none-any.whl (19 kB)
+2026-11-23T04:22:37.1540744Z #8 3.800 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-23T04:22:37.1541248Z #8 3.803 Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+2026-11-23T04:22:37.1541723Z #8 3.807 Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-11-23T04:22:37.3481864Z #8 4.152 Installing collected packages: tzdata, typing-extensions, truststore, threadpoolctl, pygments, pluggy, packaging, numpy, narwhals, iniconfig, idna, h11, cloudpickle, click, annotated-types, annotated-doc, uvicorn, typing-inspection, scipy, python-dateutil, pytest, pydantic-core, opentelemetry-api, joblib, httpcore2, anyio, starlette, scikit-learn, pydantic, pandas, httpx2, fastapi
+2026-11-23T04:22:52.8747106Z #8 19.68 
+2026-11-23T04:22:53.0298978Z #8 19.68 Successfully installed annotated-doc-0.0.7 annotated-types-0.8.0 anyio-4.16.0 click-8.5.1 cloudpickle-3.1.3 fastapi-0.163.2 h11-0.16.0 httpcore2-2.16.2 httpx2-2.16.2 idna-3.20 iniconfig-2.3.1 joblib-1.6.0 narwhals-2.29.0 numpy-2.4.6 opentelemetry-api-1.45.2 packaging-26.3 pandas-3.0.6 pluggy-1.7.0 pydantic-2.14.3 pydantic-core-2.50.4 pygments-2.21.0 pytest-9.1.1 python-dateutil-4.0.0 scikit-learn-1.9.1 scipy-1.18.1 starlette-1.10.0 threadpoolctl-3.7.0 truststore-0.10.5 typing-extensions-4.16.0 typing-inspection-0.4.5 tzdata-2026.6 uvicorn-0.54.0
+2026-11-23T04:22:53.0302052Z #8 19.68 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+2026-11-23T04:22:53.0303422Z #8 19.68 
+2026-11-23T04:22:53.0304031Z #8 19.68 [notice] A new release of pip is available: 26.2.2 -> 26.3
+2026-11-23T04:22:53.0304500Z #8 19.68 [notice] To update, run: pip install --upgrade pip
+2026-11-23T04:22:54.0841517Z #8 DONE 20.9s
+2026-11-23T04:22:54.1881134Z 
+2026-11-23T04:22:54.1882037Z #9 [5/8] COPY fase-2/src/ ./src/
+2026-11-23T04:22:54.1882505Z #9 DONE 0.1s
+2026-11-23T04:22:54.1882794Z 
+2026-11-23T04:22:54.1882940Z #10 [6/8] COPY fase-2/train.py ./
+2026-11-23T04:22:54.1883329Z #10 DONE 0.0s
+2026-11-23T04:22:54.1883515Z 
+2026-11-23T04:22:54.1884339Z #11 [7/8] COPY fase-4/api.py fase-4/registro.py fase-4/monitor.py fase-4/pytest.ini fase-4/cliente_prueba.py fase-4/ejemplo_solicitud.json ./
+2026-11-23T04:22:54.1885052Z #11 DONE 0.0s
+2026-11-23T04:22:54.3526577Z 
+2026-11-23T04:22:54.3527484Z #12 [8/8] COPY fase-4/tests/ ./tests/
+2026-11-23T04:22:54.3528280Z #12 DONE 0.0s
+2026-11-23T04:22:54.3528567Z 
+2026-11-23T04:22:54.3528744Z #13 exporting to image
+2026-11-23T04:22:54.3529201Z #13 exporting layers
+2026-11-23T04:23:06.6903460Z #13 exporting layers 12.5s done
+2026-11-23T04:23:06.8787849Z #13 exporting manifest sha256:5603c06d96533d7ef15ba4d772b3d30e8aa13ff01383417b706c49ed3f55881b done
+2026-11-23T04:23:06.8791115Z #13 exporting config sha256:b073c31838d07c702428aaa56689c59ebd433cc894ca4aa147bc6da653ef9dae done
+2026-11-23T04:23:06.8792845Z #13 exporting attestation manifest sha256:a69907d4c072a70934cb805ee8e23859a60f8f20e9c236c3b2f20374a45e4241 done
+2026-11-23T04:23:06.8794330Z #13 exporting manifest list sha256:4b2a88a3314c7cb4ddf9231bb725eb59143be15af9753fe2f92acfc38b0ca059 done
+2026-11-23T04:23:06.8795468Z #13 naming to docker.io/library/api-vivienda:4.0 done
+2026-11-23T04:23:06.8796170Z #13 unpacking to docker.io/library/api-vivienda:4.0
+2026-11-23T04:23:08.8886146Z #13 unpacking to docker.io/library/api-vivienda:4.0 2.2s done
+2026-11-23T04:23:08.9625083Z #13 DONE 14.7s
+2026-11-23T04:23:08.9719255Z ##[group]Run docker run --rm api-vivienda:4.0 python -m pytest -v
+2026-11-23T04:23:08.9719827Z [36;1mdocker run --rm api-vivienda:4.0 python -m pytest -v[0m
+2026-11-23T04:23:08.9744688Z shell: /usr/bin/bash -e {0}
+2026-11-23T04:23:08.9745075Z ##[endgroup]
+2026-11-23T04:23:13.5562729Z ============================= test session starts ==============================
+2026-11-23T04:23:13.5581391Z platform linux -- Python 3.14.10, pytest-9.1.1, pluggy-1.7.0 -- /usr/local/bin/python
+2026-11-23T04:23:13.5588768Z cachedir: .pytest_cache
+2026-11-23T04:23:13.5589241Z rootdir: /app
+2026-11-23T04:23:13.5589682Z configfile: pytest.ini
+2026-11-23T04:23:13.5590061Z testpaths: tests
+2026-11-23T04:23:13.5590471Z plugins: anyio-4.16.0
+2026-11-23T04:23:13.5945471Z collecting ... collected 23 items
+2026-11-23T04:23:13.5945839Z 
+2026-11-23T04:23:13.8329962Z tests/test_api.py::test_health_responde_200 PASSED                       [  4%]
+2026-11-23T04:23:13.8619269Z tests/test_api.py::test_entrada_valida_devuelve_prediccion_y_version PASSED [  8%]
+2026-11-23T04:23:13.8667152Z tests/test_api.py::test_entrada_con_campo_obligatorio_ausente_se_rechaza PASSED [ 13%]
+2026-11-23T04:23:13.9101968Z tests/test_api.py::test_la_api_da_el_mismo_valor_que_el_modelo_guardado PASSED [ 17%]
+2026-11-23T04:23:13.9581505Z tests/test_api.py::test_la_variable_objetivo_no_es_necesaria_y_si_llega_se_ignora PASSED [ 21%]
+2026-11-23T04:23:13.9826073Z tests/test_api.py::test_total_bedrooms_acepta_null_y_se_imputa PASSED    [ 26%]
+2026-11-23T04:23:13.9874005Z tests/test_api.py::test_otro_campo_numerico_no_admite_null PASSED        [ 30%]
+2026-11-23T04:23:14.0044933Z tests/test_api.py::test_tipo_incompatible_se_rechaza_con_el_nombre_del_campo PASSED [ 34%]
+2026-11-23T04:23:14.0104182Z tests/test_api.py::test_categoria_desconocida_se_rechaza PASSED          [ 39%]
+2026-11-23T04:23:14.0193689Z tests/test_api.py::test_cuerpo_que_no_es_json_o_no_es_objeto_se_rechaza PASSED [ 43%]
+2026-11-23T04:23:14.0278660Z tests/test_api.py::test_modelo_no_disponible_devuelve_503_y_explica_como_elegir_version PASSED [ 47%]
+2026-11-23T04:23:14.3064307Z tests/test_api.py::test_train_guarda_version_nueva_sin_tocar_las_anteriores PASSED [ 52%]
+2026-11-23T04:23:15.2320011Z tests/test_api.py::test_train_con_cuerpo_vacio_genera_un_identificador_disponible PASSED [ 56%]
+2026-11-23T04:23:15.2370816Z tests/test_api.py::test_train_sin_datos_devuelve_503 PASSED              [ 60%]
+2026-11-23T04:23:15.2420681Z tests/test_api.py::test_train_rechaza_identificador_invalido PASSED      [ 65%]
+2026-11-23T04:23:15.2949407Z tests/test_registro.py::test_cada_intento_genera_una_sola_fila_incluido_el_rechazado PASSED [ 69%]
+2026-11-23T04:23:15.3187953Z tests/test_registro.py::test_la_prediccion_registrada_es_la_que_devolvio_la_api PASSED [ 73%]
+2026-11-23T04:23:15.3923711Z tests/test_registro.py::test_encabezado_una_sola_vez_y_el_historial_se_conserva_entre_ejecuciones PASSED [ 78%]
+2026-11-23T04:23:15.4012706Z tests/test_registro.py::test_503_y_categoria_desconocida_tambien_se_registran PASSED [ 82%]
+2026-11-23T04:23:15.4089318Z tests/test_registro.py::test_las_otras_rutas_no_se_registran PASSED      [ 86%]
+2026-11-23T04:23:15.4626104Z tests/test_registro.py::test_monitor_muestra_3_solicitudes_y_33_3_por_ciento PASSED [ 91%]
+2026-11-23T04:23:15.4647221Z tests/test_registro.py::test_monitor_con_registro_vacio_indica_sin_solicitudes PASSED [ 95%]
+2026-11-23T04:23:15.4685207Z tests/test_registro.py::test_monitor_cuenta_como_fallidos_los_4xx_y_5xx PASSED [100%]
+2026-11-23T04:23:15.4695750Z 
+2026-11-23T04:23:15.4696619Z ============================== 23 passed in 1.91s ==============================
+2026-11-23T04:23:15.8842534Z ##[group]Run mkdir -p fase-4/logs
+2026-11-23T04:23:15.8843001Z [36;1mmkdir -p fase-4/logs[0m
+2026-11-23T04:23:15.8843383Z [36;1mdocker run -d --name api -p 8000:8000 \[0m
+2026-11-23T04:23:15.8844028Z [36;1m  -e MODEL_VERSION=v1 \[0m
+2026-11-23T04:23:15.8844403Z [36;1m  -v "$PWD/fase-2/models:/app/models" \[0m
+2026-11-23T04:23:15.8844824Z [36;1m  -v "$PWD/fase-2/data:/app/data:ro" \[0m
+2026-11-23T04:23:15.8845223Z [36;1m  -v "$PWD/fase-4/logs:/app/logs" \[0m
+2026-11-23T04:23:15.8845637Z [36;1m  api-vivienda:4.0[0m
+2026-11-23T04:23:15.8846010Z [36;1mfor i in $(seq 1 30); do[0m
+2026-11-23T04:23:15.8846446Z [36;1m  curl -sf http://localhost:8000/health > /dev/null && break[0m
+2026-11-23T04:23:15.8846906Z [36;1m  sleep 2[0m
+2026-11-23T04:23:15.8847201Z [36;1mdone[0m
+2026-11-23T04:23:15.8847494Z [36;1mecho "== GET /health"[0m
+2026-11-23T04:23:15.8847924Z [36;1mcurl -s http://localhost:8000/health; echo[0m
+2026-11-23T04:23:15.8848519Z [36;1mecho "== El registro vive en /app/logs, montado sobre fase-4/logs del anfitrion"[0m
+2026-11-23T04:23:15.8870537Z shell: /usr/bin/bash -e {0}
+2026-11-23T04:23:15.8870963Z ##[endgroup]
+2026-11-23T04:23:15.9359627Z d25886aa6ba1efc0f9f4cf53a1d6e73543e2bb2fbc4f677ebdbec48216f8d724
+2026-11-23T04:23:18.0866745Z == GET /health
+2026-11-23T04:23:18.0937717Z {"status":"ok","mensaje":"La API esta en ejecucion","version_configurada":"v1","modelo_disponible":true}
+2026-11-23T04:23:18.0938767Z == El registro vive en /app/logs, montado sobre fase-4/logs del anfitrion
+2026-11-23T04:23:18.0977490Z ##[group]Run echo "== valida 1: fase-4/ejemplo_solicitud.json (esperado 200, v1, 431942.36)"
+2026-11-23T04:23:18.0978329Z [36;1mecho "== valida 1: fase-4/ejemplo_solicitud.json (esperado 200, v1, 431942.36)"[0m
+2026-11-23T04:23:18.0978895Z [36;1mpython3 fase-4/cliente_prueba.py[0m
+2026-11-23T04:23:18.0979439Z [36;1mecho "== valida 2: fila 2 de fase-2/data/ejemplo_prediccion.csv (esperado 200, v1, 388912.02)"[0m
+2026-11-23T04:23:18.0980104Z [36;1mpython3 fase-4/cliente_prueba.py --csv fase-2/data/ejemplo_prediccion.csv --fila 2[0m
+2026-11-23T04:23:18.0980683Z [36;1mecho "== invalida: sin median_income (esperado 422)"[0m
+2026-11-23T04:23:18.0981163Z [36;1mpython3 fase-4/cliente_prueba.py --quitar median_income || true[0m
+2026-11-23T04:23:18.1002987Z shell: /usr/bin/bash -e {0}
+2026-11-23T04:23:18.1003402Z ##[endgroup]
+2026-11-23T04:23:18.1040204Z == valida 1: fase-4/ejemplo_solicitud.json (esperado 200, v1, 431942.36)
+2026-11-23T04:23:18.8206997Z GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
+2026-11-23T04:23:18.8209314Z POST /predict  solicitud: {"longitude": -122.23, "latitude": 37.88, "housing_median_age": 41.0, "total_rooms": 880.0, "total_bedrooms": 129.0, "population": 322.0, "households": 126.0, "median_income": 8.3252, "ocean_proximity": "NEAR BAY"}
+2026-11-23T04:23:18.8211796Z POST /predict  -> 200 {"prediccion": 431942.36, "version": "v1"}
+2026-11-23T04:23:18.8337817Z == valida 2: fila 2 de fase-2/data/ejemplo_prediccion.csv (esperado 200, v1, 388912.02)
+2026-11-23T04:23:18.9333797Z GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
+2026-11-23T04:23:18.9335493Z POST /predict  solicitud: {"longitude": -122.22, "latitude": 37.86, "housing_median_age": 21.0, "total_rooms": 7099.0, "total_bedrooms": 1106.0, "population": 2401.0, "households": 1138.0, "median_income": 8.3014, "ocean_proximity": "NEAR BAY"}
+2026-11-23T04:23:18.9336434Z POST /predict  -> 200 {"prediccion": 388912.02, "version": "v1"}
+2026-11-23T04:23:18.9486142Z == invalida: sin median_income (esperado 422)
+2026-11-23T04:23:19.0144933Z GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
+2026-11-23T04:23:19.0146290Z POST /predict  solicitud: {"longitude": -122.23, "latitude": 37.88, "housing_median_age": 41.0, "total_rooms": 880.0, "total_bedrooms": 129.0, "population": 322.0, "households": 126.0, "ocean_proximity": "NEAR BAY"}
+2026-11-23T04:23:19.0147630Z POST /predict  -> 422 {"error": "entrada_invalida", "mensaje": "La entrada no es valida. median_income: campo obligatorio ausente", "detalle": [{"campo": "median_income", "problema": "campo obligatorio ausente"}]}
+2026-11-23T04:23:19.0292309Z ##[group]Run echo "== fase-4/logs/solicitudes.csv, leido en la maquina anfitriona"
+2026-11-23T04:23:19.0292944Z [36;1mecho "== fase-4/logs/solicitudes.csv, leido en la maquina anfitriona"[0m
+2026-11-23T04:23:19.0293479Z [36;1mcat fase-4/logs/solicitudes.csv[0m
+2026-11-23T04:23:19.0314596Z shell: /usr/bin/bash -e {0}
+2026-11-23T04:23:19.0314955Z ##[endgroup]
+2026-11-23T04:23:19.0352458Z == fase-4/logs/solicitudes.csv, leido en la maquina anfitriona
+2026-11-23T04:23:19.0375096Z fecha_hora,estado_http,version,prediccion
+2026-11-23T04:23:19.0375799Z 2026-11-23T04:23:18,200,v1,431942.36
+2026-11-23T04:23:19.0376154Z 2026-11-23T04:23:18,200,v1,388912.02
+2026-11-23T04:23:19.0376496Z 2026-11-23T04:23:19,422,,
+2026-11-23T04:23:19.0411535Z ##[group]Run docker run --rm -v "$PWD/fase-4/logs:/app/logs" api-vivienda:4.0 python monitor.py
+2026-11-23T04:23:19.0412201Z [36;1mdocker run --rm -v "$PWD/fase-4/logs:/app/logs" api-vivienda:4.0 python monitor.py[0m
+2026-11-23T04:23:19.0429311Z shell: /usr/bin/bash -e {0}
+2026-11-23T04:23:19.0429655Z ##[endgroup]
+2026-11-23T04:23:19.4084032Z Registro                : /app/logs/solicitudes.csv
+2026-11-23T04:23:19.4085029Z Total de solicitudes    : 3
+2026-11-23T04:23:19.4085665Z Solicitudes fallidas    : 1 (HTTP 4xx o 5xx)
+2026-11-23T04:23:19.4086243Z Porcentaje de fallos    : 33,3 %
+2026-11-23T04:23:19.4087226Z Solicitudes por version : v1: 2
+2026-11-23T04:23:19.4933232Z ##[group]Run docker restart api
+2026-11-23T04:23:19.4933940Z [36;1mdocker restart api[0m
+2026-11-23T04:23:19.4934455Z [36;1mfor i in $(seq 1 30); do[0m
+2026-11-23T04:23:19.4934992Z [36;1m  curl -sf http://localhost:8000/health > /dev/null && break[0m
+2026-11-23T04:23:19.4935433Z [36;1m  sleep 2[0m
+2026-11-23T04:23:19.4935761Z [36;1mdone[0m
+2026-11-23T04:23:19.4936150Z [36;1mecho "== una solicitud mas despues del reinicio"[0m
+2026-11-23T04:23:19.4936596Z [36;1mpython3 fase-4/cliente_prueba.py[0m
+2026-11-23T04:23:19.4937128Z [36;1mecho "== el registro conserva las filas anteriores y agrega la nueva"[0m
+2026-11-23T04:23:19.4937651Z [36;1mcat fase-4/logs/solicitudes.csv[0m
+2026-11-23T04:23:19.4938101Z [36;1mecho "== monitor.py ahora (esperado: 4 solicitudes, 25,0 %)"[0m
+2026-11-23T04:23:19.4938713Z [36;1mdocker run --rm -v "$PWD/fase-4/logs:/app/logs" api-vivienda:4.0 python monitor.py[0m
+2026-11-23T04:23:19.4960803Z shell: /usr/bin/bash -e {0}
+2026-11-23T04:23:19.4961274Z ##[endgroup]
+2026-11-23T04:23:20.0344028Z api
+2026-11-23T04:23:22.0671743Z == una solicitud mas despues del reinicio
+2026-11-23T04:23:22.7942694Z GET  /health  -> 200 {"status": "ok", "mensaje": "La API esta en ejecucion", "version_configurada": "v1", "modelo_disponible": true}
+2026-11-23T04:23:22.7943992Z POST /predict  solicitud: {"longitude": -122.23, "latitude": 37.88, "housing_median_age": 41.0, "total_rooms": 880.0, "total_bedrooms": 129.0, "population": 322.0, "households": 126.0, "median_income": 8.3252, "ocean_proximity": "NEAR BAY"}
+2026-11-23T04:23:22.7944851Z POST /predict  -> 200 {"prediccion": 431942.36, "version": "v1"}
+2026-11-23T04:23:22.8108394Z == el registro conserva las filas anteriores y agrega la nueva
+2026-11-23T04:23:22.8131320Z fecha_hora,estado_http,version,prediccion
+2026-11-23T04:23:22.8132186Z 2026-11-23T04:23:18,200,v1,431942.36
+2026-11-23T04:23:22.8132793Z 2026-11-23T04:23:18,200,v1,388912.02
+2026-11-23T04:23:22.8135252Z 2026-11-23T04:23:19,422,,
+2026-11-23T04:23:22.8135829Z 2026-11-23T04:23:22,200,v1,431942.36
+2026-11-23T04:23:22.8136489Z == monitor.py ahora (esperado: 4 solicitudes, 25,0 %)
+2026-11-23T04:23:23.1831996Z Registro                : /app/logs/solicitudes.csv
+2026-11-23T04:23:23.1832474Z Total de solicitudes    : 4
+2026-11-23T04:23:23.1833002Z Solicitudes fallidas    : 1 (HTTP 4xx o 5xx)
+2026-11-23T04:23:23.1833402Z Porcentaje de fallos    : 25,0 %
+2026-11-23T04:23:23.1834010Z Solicitudes por version : v1: 3
+2026-11-23T04:23:23.2644959Z ##[group]Run docker logs api
+2026-11-23T04:23:23.2645357Z [36;1mdocker logs api[0m
+2026-11-23T04:23:23.2666730Z shell: /usr/bin/bash -e {0}
+2026-11-23T04:23:23.2667108Z ##[endgroup]
+2026-11-23T04:23:23.2835602Z INFO:     Started server process [1]
+2026-11-23T04:23:23.2836434Z INFO:     Waiting for application startup.
+2026-11-23T04:23:23.2837334Z INFO:     172.17.0.1:33558 - "GET /health HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2838052Z INFO:     Application startup complete.
+2026-11-23T04:23:23.2838924Z INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-11-23T04:23:23.2839736Z INFO:     Shutting down
+2026-11-23T04:23:23.2840260Z INFO:     172.17.0.1:33564 - "GET /health HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2840890Z INFO:     Waiting for application shutdown.
+2026-11-23T04:23:23.2841389Z INFO:     Application shutdown complete.
+2026-11-23T04:23:23.2841938Z INFO:     Finished server process [1]
+2026-11-23T04:23:23.2842598Z INFO:     Started server process [1]
+2026-11-23T04:23:23.2843127Z INFO:     Waiting for application startup.
+2026-11-23T04:23:23.2843803Z INFO:     Application startup complete.
+2026-11-23T04:23:23.2844474Z INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-11-23T04:23:23.2845208Z INFO:     172.17.0.1:33568 - "GET /health HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2845866Z INFO:     172.17.0.1:33582 - "POST /predict HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2846431Z INFO:     172.17.0.1:33592 - "GET /health HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2847487Z INFO:     172.17.0.1:33600 - "POST /predict HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2848109Z INFO:     172.17.0.1:33616 - "GET /health HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2848868Z INFO:     172.17.0.1:33618 - "POST /predict HTTP/1.1" 422 Unprocessable Content
+2026-11-23T04:23:23.2849568Z INFO:     172.17.0.1:33622 - "GET /health HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2850159Z INFO:     172.17.0.1:33634 - "GET /health HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2850815Z INFO:     172.17.0.1:33638 - "POST /predict HTTP/1.1" 200 OK
+2026-11-23T04:23:23.2971532Z Post job cleanup.
+2026-11-23T04:23:23.3832381Z [command]/usr/bin/git version
+2026-11-23T04:23:23.3855161Z git version 2.56.1
+2026-11-23T04:23:23.3896646Z Temporarily overriding HOME='/home/runner/work/_temp/987aedc9-b716-4ab7-9190-73eae49350e8' before making global git config changes
+2026-11-23T04:23:23.3897870Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-23T04:23:23.3902256Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Proyecto-Modelos-1/Proyecto-Modelos-1
+2026-11-23T04:23:23.3940578Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-23T04:23:23.3972322Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-23T04:23:23.4213229Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-23T04:23:23.4234468Z http.https://github.com/.extraheader
+2026-11-23T04:23:23.4245641Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-23T04:23:23.4277097Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-23T04:23:23.4525839Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-23T04:23:23.4555039Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-23T04:23:23.4918954Z Cleaning up orphan processes
+2026-11-23T04:23:23.5335729Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -172,6 +172,7 @@ Resultado: **23 passed**, registrado en [`evidencia/pytest.txt`](evidencia/pytes
 | [`evidencia/pytest.txt`](evidencia/pytest.txt) | `python -m pytest` desde `fase-4/` |
 | [`evidencia/ejecucion.txt`](evidencia/ejecucion.txt) | arranque de la API, el cliente, el contenido del registro y la salida de `monitor.py` |
 | [`evidencia/registro_muestra.csv`](evidencia/registro_muestra.csv) | el registro utilizado |
+| [`evidencia/docker.txt`](evidencia/docker.txt) | Demostración en Docker ejecutada en GitHub Actions (flujo `.github/workflows/docker-fase-4.yml`): arranque con el registro montado, ensayo de 3 solicitudes, `monitor.py` (3 solicitudes, 33,3 %) y conservación del registro tras reiniciar el contenedor (4 solicitudes, 25,0 %) |
 
 - El registro es un CSV local: sirve para esta demostración, no para varias réplicas de la API ni para volúmenes grandes.
 - Si no se puede escribir en el registro, la API sigue respondiendo y avisa por la salida de error.

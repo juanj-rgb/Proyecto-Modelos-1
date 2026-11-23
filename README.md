@@ -18,21 +18,40 @@ El objetivo es construir un modelo predictivo reproducible y bien documentado, c
 
 ```text
 Proyecto-Modelos-1/
-├── fase-1/
-│   ├── data/                  # housing.csv (no versionado) y particiones crudas generadas por el notebook
-│   ├── resultados/
-│   │   ├── metricas_cv.csv    # Selección: validación cruzada sobre entrenamiento (6 candidatos)
-│   │   └── metricas.csv       # Evaluación final en prueba, una sola vez (se recrea en cada ejecución)
-│   ├── notebook.ipynb         # Notebook principal: EDA, pipeline, selección, evaluación y guardado
+├── fase-1/                    # Modelo predictivo: notebook, pipeline y modelo guardado
+│   ├── data/                  # housing.csv (no versionado) y particiones crudas del notebook
+│   ├── resultados/            # metricas_cv.csv (validación cruzada) y metricas.csv (prueba final)
+│   ├── notebook.ipynb         # EDA, pipeline, selección, evaluación y guardado
 │   ├── modelo.joblib          # Pipeline completo entrenado (imputador + codificador + Random Forest)
 │   ├── modelo_info.json       # Columnas de entrada, modelo elegido y versiones de las librerías
-│   └── README.md              # Documentación específica de la Fase 1
-├── requirements.txt           # Dependencias con versiones fijadas
+│   └── README.md
+├── fase-2/                    # Aplicación de línea de comandos y versionamiento del modelo
+│   ├── src/                   # Lógica reutilizable: config, data, preprocessing, modeling, versioning
+│   ├── models/                # Versiones guardadas v1 y v2: modelo.joblib, metrics.json, metadata.json
+│   ├── train.py, predict.py   # Entrenar una versión y predecir sobre un CSV nuevo
+│   ├── tests/, evidencia/     # Pruebas con pytest y salidas reales de terminal
+│   ├── Dockerfile
+│   └── README.md
+├── fase-3/                    # API REST sobre el modelo de la Fase 2
+│   ├── api.py                 # GET /health, GET /versiones, POST /predict, POST /train
+│   ├── cliente_prueba.py      # Cliente sencillo, solo con la librería estándar
+│   ├── tests/, evidencia/     # 16 pruebas, y evidencia de pytest y de Docker
+│   ├── Dockerfile
+│   └── README.md
+├── fase-4/                    # Monitoreo: registro de solicitudes e indicadores de operación
+│   ├── api.py                 # La API de la Fase 3 más el registro de cada llamada a /predict
+│   ├── registro.py            # Escribe una fila por intento en logs/solicitudes.csv
+│   ├── monitor.py             # Total de solicitudes y porcentaje de fallos
+│   ├── tests/, evidencia/     # 23 pruebas, el reporte y la muestra del registro
+│   ├── Dockerfile
+│   └── README.md
+├── .github/workflows/         # Demostración de las Fases 3 y 4 en Docker
+├── requirements.txt           # Dependencias de la Fase 1 (cada fase tiene el suyo)
 ├── .gitignore
 └── README.md                  # Este archivo
 ```
 
-> `housing.csv` no se versiona por su tamaño. Descárgalo de Kaggle y ubícalo en `fase-1/data/housing.csv`.
+> `housing.csv` no se versiona. Descárgalo de Kaggle y ubícalo en `fase-1/data/housing.csv` y en `fase-2/data/housing.csv` (las Fases 3 y 4 leen el de la Fase 2).
 
 ---
 
@@ -42,7 +61,8 @@ Proyecto-Modelos-1/
 |:---:|:---:|---|
 | **Sprint 1** | ✅ Completado (v1.1, corregido tras la retroalimentación) | [Ver detalles](#-sprint-1--modelo-predictivo-fase-1) |
 | **Sprint 2** | ✅ Completado | Scripts de entrenamiento y predicción, versionamiento, Docker y pruebas (ver [`fase-2/`](fase-2/README.md)) |
-| **Sprint 3** | 🔜 Pendiente | Despliegue con Docker y API REST |
+| **Sprint 3** | ✅ Completado | API REST sobre el modelo, validación de entradas, Docker y 16 pruebas (ver [`fase-3/`](fase-3/README.md)) |
+| **Sprint 4** | ✅ Completado | Registro de solicitudes, indicadores de operación y política de reentrenamiento (ver [`fase-4/`](fase-4/README.md)) |
 
 ---
 

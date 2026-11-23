@@ -1,0 +1,83 @@
+# Demostracion de la Fase 4 en Docker, ejecutada por GitHub Actions
+# (maquina Ubuntu con Docker). Cubre los pasos 04 y 05 de la comprobacion de
+# la entrega: arranque con el registro en una carpeta montada, el ensayo de
+# tres solicitudes, el monitoreo, y que el registro se conserva al reiniciar.
+#
+# Se lanza a mano desde la pestana Actions ("Run workflow") o al abrir un PR
+# hacia develop que toque fase-4.
+name: docker-fase-4
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [develop]
+    paths:
+      - "fase-4/**"
+      - "fase-2/src/**"
+      - "fase-2/train.py"
+      - ".github/workflows/docker-fase-4.yml"
+
+jobs:
+  fase-4:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: "Construir la imagen (contexto: raiz del repositorio)"
+        run: docker build -f fase-4/Dockerfile -t api-vivienda:4.0 --build-arg GIT_COMMIT=${{ github.sha }} .
+
+      - name: Pruebas pytest dentro de la imagen
+        run: docker run --rm api-vivienda:4.0 python -m pytest -v
+
+      - name: "04 - Arrancar la API con el registro en una carpeta montada"
+        run: |
+          mkdir -p fase-4/logs
+          docker run -d --name api -p 8000:8000 \
+            -e MODEL_VERSION=v1 \
+            -v "$PWD/fase-2/models:/app/models" \
+            -v "$PWD/fase-2/data:/app/data:ro" \
+            -v "$PWD/fase-4/logs:/app/logs" \
+            api-vivienda:4.0
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/health > /dev/null && break
+            sleep 2
+          done
+          echo "== GET /health"
+          curl -s http://localhost:8000/health; echo
+          echo "== El registro vive en /app/logs, montado sobre fase-4/logs del anfitrion"
+
+      - name: "05 - Dos solicitudes validas y una sin median_income"
+        run: |
+          echo "== valida 1: fase-4/ejemplo_solicitud.json (esperado 200, v1, 431942.36)"
+          python3 fase-4/cliente_prueba.py
+          echo "== valida 2: fila 2 de fase-2/data/ejemplo_prediccion.csv (esperado 200, v1, 388912.02)"
+          python3 fase-4/cliente_prueba.py --csv fase-2/data/ejemplo_prediccion.csv --fila 2
+          echo "== invalida: sin median_income (esperado 422)"
+          python3 fase-4/cliente_prueba.py --quitar median_income || true
+
+      - name: "05 - El registro persiste FUERA del contenedor"
+        run: |
+          echo "== fase-4/logs/solicitudes.csv, leido en la maquina anfitriona"
+          cat fase-4/logs/solicitudes.csv
+
+      - name: "05 - monitor.py sobre el registro montado (esperado: 3 solicitudes, 33,3 %)"
+        run: docker run --rm -v "$PWD/fase-4/logs:/app/logs" api-vivienda:4.0 python monitor.py
+
+      - name: "El historial se conserva entre ejecuciones (reinicio del contenedor)"
+        run: |
+          docker restart api
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/health > /dev/null && break
+            sleep 2
+          done
+          echo "== una solicitud mas despues del reinicio"
+          python3 fase-4/cliente_prueba.py
+          echo "== el registro conserva las filas anteriores y agrega la nueva"
+          cat fase-4/logs/solicitudes.csv
+          echo "== monitor.py ahora (esperado: 4 solicitudes, 25,0 %)"
+          docker run --rm -v "$PWD/fase-4/logs:/app/logs" api-vivienda:4.0 python monitor.py
+
+      - name: Registro del contenedor
+        if: always()
+        run: docker logs api
