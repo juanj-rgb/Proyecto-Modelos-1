@@ -1,0 +1,27 @@
+# Se aplica al construir con: docker build -f fase-4/Dockerfile ... .   (contexto = raiz del repositorio)
+.git
+.gitignore
+**/__pycache__
+**/*.pyc
+**/venv
+**/.venv
+**/.pytest_cache
+**/.vscode
+
+# Lo que la imagen no necesita: datos, modelos y salidas se montan como volumenes
+fase-1
+fase-2/models
+fase-2/data
+fase-2/outputs
+fase-2/tests
+fase-2/evidencia
+fase-3
+**/logs
+**/outputs
+
+# Credenciales (nunca deben entrar en la imagen)
+**/.env
+**/*.env
+**/credentials*
+**/*.pem
+**/*.key

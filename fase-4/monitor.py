@@ -1,102 +1,78 @@
-"""Metricas de operacion de la API (Fase 4).
+"""Metricas de operacion a partir del registro de la API.
 
-Lee el registro que escribe registro.py y muestra dos indicadores:
-  - total de solicitudes de prediccion recibidas;
-  - porcentaje de solicitudes fallidas (respuestas HTTP 4xx o 5xx).
+Muestra el total de solicitudes y el porcentaje de solicitudes fallidas (HTTP 4xx o 5xx).
+No mide la calidad de las predicciones: eso exigiria conocer los resultados reales.
 
-Si el registro esta vacio o todavia no existe, muestra total 0 e indica
-«sin solicitudes» para el porcentaje.
-
-Uso (desde fase-4/, con el entorno virtual activo):
+Uso (desde fase-4/):
     python monitor.py
-    python monitor.py --registro logs/solicitudes.csv
-    python monitor.py --registro evidencia/registro_muestra.csv
+    python monitor.py --log logs/solicitudes.csv
 """
 from __future__ import annotations
 
 import argparse
 import csv
+import os
 import sys
 from collections import Counter
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parent
-RUTA_POR_DEFECTO = RAIZ / "logs" / "solicitudes.csv"
-SIN_MODELO = "(sin modelo)"
+RUTA_POR_DEFECTO = "logs/solicitudes.csv"
 
 
-def leer_registro(ruta: Path) -> tuple[list[dict], int]:
-    """Devuelve (filas validas, numero de filas descartadas).
-
-    Se descarta una fila cuyo estado_http no sea un numero entero: es un renglon
-    corrupto y contarlo falsearia los indicadores.
-    """
-    if not ruta.is_file():
-        return [], 0
-    with open(ruta, newline="", encoding="utf-8-sig") as f:
-        filas = list(csv.DictReader(f))
-    validas, descartadas = [], 0
-    for fila in filas:
-        try:
-            fila["estado_http"] = int(str(fila.get("estado_http", "")).strip())
-        except (TypeError, ValueError):
-            descartadas += 1
-            continue
-        validas.append(fila)
-    return validas, descartadas
-
-
-def calcular(filas: list[dict]) -> dict:
-    """Total, fallidas y tasa de fallos. La tasa es None cuando no hay solicitudes."""
-    total = len(filas)
-    fallidas = sum(1 for f in filas if 400 <= f["estado_http"] <= 599)
+def calcular(ruta) -> dict:
+    """Lee el registro y devuelve total, fallidas, porcentaje (None si no hay solicitudes),
+    solicitudes por version y filas descartadas por tener un codigo ilegible."""
+    ruta = Path(ruta)
+    total = fallidas = ilegibles = 0
+    por_version: Counter = Counter()
+    existe = ruta.is_file()
+    if existe:
+        with open(ruta, newline="", encoding="utf-8-sig") as f:
+            for fila in csv.DictReader(f):
+                try:
+                    codigo = int(str(fila.get("estado_http", "")).strip())
+                except ValueError:
+                    ilegibles += 1
+                    continue
+                total += 1
+                if 400 <= codigo <= 599:
+                    fallidas += 1
+                if fila.get("version"):
+                    por_version[fila["version"]] += 1
     return {
+        "existe": existe,
         "total": total,
         "fallidas": fallidas,
-        "tasa": (fallidas / total * 100) if total else None,
+        "porcentaje": (fallidas / total * 100) if total else None,
+        "por_version": dict(por_version),
+        "ilegibles": ilegibles,
     }
 
 
-def formato_porcentaje(tasa: float | None) -> str:
-    return "sin solicitudes" if tasa is None else f"{tasa:.1f}".replace(".", ",") + " %"
+def formatear_porcentaje(valor) -> str:
+    if valor is None:
+        return "sin solicitudes"
+    return f"{valor:.1f}".replace(".", ",") + " %"
 
 
-def informe(ruta: Path, filas: list[dict], descartadas: int) -> str:
-    r = calcular(filas)
-    lineas = [
-        f"Registro: {ruta}" + ("" if ruta.is_file() else "  (no existe todavia)"),
-        "",
-        f"Total de solicitudes : {r['total']}",
-        f"Solicitudes fallidas : {r['fallidas']}   (respuestas HTTP 4xx o 5xx)",
-        f"Tasa de fallos       : {formato_porcentaje(r['tasa'])}",
-    ]
-    if r["total"]:
-        lineas += ["", "Por codigo HTTP:"]
-        for codigo, n in sorted(Counter(f["estado_http"] for f in filas).items()):
-            lineas.append(f"  {codigo}  {n}")
-        lineas += ["", "Por version utilizada:"]
-        versiones = Counter((f.get("version") or "").strip() or SIN_MODELO for f in filas)
-        ancho = max(len(v) for v in versiones)
-        for version, n in sorted(versiones.items()):
-            lineas.append(f"  {version.ljust(ancho)}  {n}")
-    if descartadas:
-        lineas += ["", f"Aviso: se descartaron {descartadas} fila(s) sin un codigo HTTP valido."]
-    return "\n".join(lineas)
-
-
-def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(description="Indicadores de operacion de la API de prediccion.")
-    p.add_argument("--registro", default=str(RUTA_POR_DEFECTO),
-                   help="Archivo CSV del registro (por defecto logs/solicitudes.csv).")
+def main(argv=None) -> int:
+    p = argparse.ArgumentParser(description="Total de solicitudes y porcentaje de fallos de la API.")
+    p.add_argument("--log", default=os.environ.get("LOG_PATH", RUTA_POR_DEFECTO),
+                   help=f"Archivo de registro (por defecto LOG_PATH o {RUTA_POR_DEFECTO}).")
     args = p.parse_args(argv)
 
-    ruta = Path(args.registro)
-    try:
-        filas, descartadas = leer_registro(ruta)
-    except OSError as exc:
-        print(f"ERROR: no se pudo leer el registro {ruta}: {exc}", file=sys.stderr)
-        return 1
-    print(informe(ruta, filas, descartadas))
+    r = calcular(args.log)
+    print(f"Registro                : {args.log}")
+    if not r["existe"]:
+        print("AVISO: el archivo no existe todavia; se trata como un registro vacio.", file=sys.stderr)
+    if r["ilegibles"]:
+        print(f"AVISO: {r['ilegibles']} fila(s) con codigo HTTP ilegible no se cuentan.", file=sys.stderr)
+    print(f"Total de solicitudes    : {r['total']}")
+    print(f"Solicitudes fallidas    : {r['fallidas']} (HTTP 4xx o 5xx)")
+    print(f"Porcentaje de fallos    : {formatear_porcentaje(r['porcentaje'])}")
+    if r["por_version"]:
+        usadas = ", ".join(f"{v}: {n}" for v, n in sorted(r["por_version"].items()))
+        print(f"Solicitudes por version : {usadas}")
     return 0
 
 
